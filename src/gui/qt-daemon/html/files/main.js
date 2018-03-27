@@ -180,11 +180,11 @@ function build_prefix(count)
 function print_money(amount)
 {
     var am_str  = amount.toString();
-    if(am_str.length <= 12)
+    if(am_str.length <= 6)
     {
-        am_str = build_prefix(13 - am_str.length) + am_str;
+        am_str = build_prefix(7 - am_str.length) + am_str;
     }
-    am_str = am_str.slice(0, am_str.length - 12) + "." + am_str.slice(am_str.length - 12);
+    am_str = am_str.slice(0, am_str.length - 6) + "." + am_str.slice(am_str.length - 6);
     return am_str;
 }
 
@@ -312,10 +312,10 @@ function on_update_wallet_info(wal_status)
     $("#wallet_path").text(wal_status.path);
     if(current_exchange_rate && current_exchange_rate !== undefined && current_exchange_rate !== 0)
     {
-        $("#est_value_btc_id").text( ((wal_status.unlocked_balance/1000000000000 )*current_exchange_rate).toFixed(5));
+        $("#est_value_btc_id").text( ((wal_status.unlocked_balance/1000000 )*current_exchange_rate).toFixed(5));
         if(current_btc_to_usd_exchange_rate && current_btc_to_usd_exchange_rate !== undefined && current_btc_to_usd_exchange_rate !== 0)
         {
-            $("#est_value_usd_id").text( (((wal_status.unlocked_balance/1000000000000 )*current_exchange_rate)*current_btc_to_usd_exchange_rate).toFixed(2));
+            $("#est_value_usd_id").text( (((wal_status.unlocked_balance/1000000 )*current_exchange_rate)*current_btc_to_usd_exchange_rate).toFixed(2));
         }
     }
 

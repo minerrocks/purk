@@ -1,6 +1,6 @@
 set -x #echo on
 
-export PROJECT_ROOT="/Users/vshevchyk/projects/purk"
+export PROJECT_ROOT="/Users/vshevchyk/Downloads/purk-master"
 export QT_PATH="/Users/vshevchyk/Qt/5.5"
 export LOCAL_BOOST_LIBS_PATH="/usr/local/opt/boost/lib"
 
@@ -19,7 +19,7 @@ fi
 # fi
 
 #rm -rf build; mkdir -p build/release; cd build/release;
- cd build/release;
+cd build/release;
 
 cmake -D BUILD_GUI=TRUE -D CMAKE_PREFIX_PATH="$QT_PATH/clang_64" -D CMAKE_BUILD_TYPE=Release ../..
 if [ $? -ne 0 ]; then
