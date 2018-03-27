@@ -29,8 +29,9 @@ Anyone is able to contribute to Purk. If you have a bug fix or code change, feel
 ## Specifications
 
 * Algorithm: Wild Keccak
-* Block Generation: 1 minute
 * Supply: 179,424,673 PURKs
+* Block Retarget: 90 Seconds
+* Emission: 21
 * Default P2P Port: 10110 
 * Default RPC Port: 10120 
 * Premine: 0%
