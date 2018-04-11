@@ -3,6 +3,7 @@
 * Website: https://purkproject.com
 * Docs: https://docs.purkproject.com
 * Explorer: https://explorer.purkproject.com
+* Pool: https://pool.purkproject.com
 * Github: https://github.com/purkproject/purk
 
 ## Introduction
