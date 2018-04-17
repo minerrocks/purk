@@ -275,13 +275,13 @@ function get_transfer_html_entry(tr, is_recent)
         }
         action_text = "Unconfirmed";
     }
-
+   
     var dt;
 
     if (tr.timestamp != 0) {
        dt = new Date(tr.timestamp*1000);
     } else {
-       dt = new Date(Date.now());
+       dt = "In Progress";
     }
 
     var transfer_line_tamplate = "<div class='transfer_entry_line' id='transfer_entry_line_{4}_id' style='color: {0}'>";
