@@ -4,7 +4,7 @@
 #define MyAppName "Purk"
 ;#define MyAppVersion "0.2.0.31"
 #define MyAppPublisher "Purk Project"
-#define MyAppURL "https://purk.io"
+#define MyAppURL "https://purkproject.com"
 #define MyAppExeName "qt-purk.exe"
 ;#define BinariesPath "C:\jenkins\workdir\builds\purk-win-x64-v0.2.0.31(5d85ebf)"
 
