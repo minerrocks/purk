@@ -179,7 +179,7 @@ namespace net_utils
 				response.m_response_code = 200;
 				response.m_response_comment = "OK";
 				response.m_body.clear();
-                //response.m_additional_fields.append(std::make_pair("Access-Control-Allow-Origin","https://purk.io/"));
+                //response.m_additional_fields.append(std::make_pair("Access-Control-Allow-Origin","https://purkproject.com/"));
 				return m_config.m_phandler->handle_http_request(query_info, response, m_conn_context);
 			}
 
