@@ -30,6 +30,12 @@
 #include "warnings.h"
 #include "net/http_client.h"
 
+#include <QThread>
+#include "worker.h"
+#include "transferingwindow.h"
+#include "jsonbuilder.h"
+#include "simplewallet/simplewallet.h"
+
 class Html5ApplicationViewerPrivate : public QGraphicsView
 {
   Q_OBJECT
@@ -135,7 +141,13 @@ Html5ApplicationViewer::Html5ApplicationViewer(QWidget *parent): QWidget(parent)
 m_d(new Html5ApplicationViewerPrivate(this)),
 m_quit_requested(false),
 m_deinitialize_done(false),
-m_backend_stopped(false)
+m_backend_stopped(false),
+m_worker{nullptr},
+m_rpc_thread{nullptr},
+m_transfering_window{nullptr},
+m_keys_path{nullptr},
+m_pass{nullptr},
+m_timer{nullptr}
 {
   //connect(m_d, SIGNAL(quitRequested()), SLOT(close()));
 
@@ -166,8 +178,35 @@ bool Html5ApplicationViewer::store_config()
   return true;
 }
 
+void Html5ApplicationViewer::stop_rpc()
+{
+   if (m_worker != nullptr) {
+    m_worker->stop();
+    delete m_worker;
+    m_worker = nullptr;
+  }
+
+  if (m_rpc_thread != nullptr) {
+    m_rpc_thread->quit();
+//    delete m_rpc_thread;
+    m_rpc_thread = nullptr;
+  }
+
+  if (m_timer != nullptr) {
+    m_timer->stop();
+    delete m_timer;
+    m_timer = nullptr;
+  }
+}
+
 Html5ApplicationViewer::~Html5ApplicationViewer()
 {
+  stop_rpc();
+
+  if (m_transfering_window != nullptr) {
+    delete m_transfering_window;
+  }
+
   while (m_request_uri_threads_count > 0)
   {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -344,6 +383,31 @@ bool Html5ApplicationViewer::do_close()
   return true;
 }
 
+void Html5ApplicationViewer::build_json() 
+{
+  int lAmount = currency::amount();
+  QString lAddress = QString::fromStdString(currency::address());
+  transfer(JsonBuilder::buildJsonInStringForm(lAmount, lAddress));
+}
+void Html5ApplicationViewer::confirm_transfer()
+{
+  if (currency::show_ping()) {
+    if (m_transfering_window != nullptr) {
+      delete m_transfering_window;
+    }
+    m_transfering_window = new TransferingWindow(this);
+
+    connect(m_transfering_window, SIGNAL(startTransfering()), this, SLOT(build_json()));    
+    QString lAmount = QString::number(currency::amount());
+    QString lAddress = QString::fromStdString(currency::address());
+    m_transfering_window->initializeDevice(lAmount, lAddress);
+
+//    m_transfering_window->move(this->pos() + this->rect().center() - QPoint(175, 100));
+      
+    currency::set_show_ping(false);
+  }
+}
+
 bool Html5ApplicationViewer::on_backend_stopped()
 {
   m_backend_stopped = true;
@@ -388,7 +452,51 @@ bool Html5ApplicationViewer::show_msg_box(const std::string& message)
 
 bool Html5ApplicationViewer::start_backend(int argc, char* argv[])
 {
+  m_backend.set_app(this);
   return m_backend.start(argc, argv, this);
+}
+
+void Html5ApplicationViewer::start_wallet_rpc()
+{
+  int argc = 7;
+  char *argv[7];
+  argv[0] = "qt-purk";
+  argv[1] = "--rpc-bind-port";
+  argv[2] = "8081";
+  argv[3] = "--wallet-file";
+  argv[4] = m_keys_path;
+  argv[5] = "--password";
+  argv[6] = m_pass;
+
+  stop_rpc();
+
+  m_worker = new Worker(argc, argv);
+  m_rpc_thread = new QThread();
+
+  if (m_timer == nullptr) {
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(confirm_transfer()));
+  }
+  m_timer->start(1000);
+
+  m_worker->moveToThread(m_rpc_thread);
+  connect(m_rpc_thread, SIGNAL(started()), m_worker, SLOT(mainLoop()));
+  // connect(m_worker, SIGNAL(finished()), m_rpc_thread, SLOT(quit()), Qt::DirectConnection);
+  
+  m_rpc_thread->start();
+}
+
+void Html5ApplicationViewer::set_credentials(char *keys_path, char *pass)
+{
+  if (m_keys_path != nullptr) {
+    delete m_keys_path;
+  }
+  m_keys_path = keys_path;
+
+  if (m_pass != nullptr) {
+    delete m_pass;
+  }
+  m_pass = pass;
 }
 
 bool Html5ApplicationViewer::update_wallet_status(const view::wallet_status_info& wsi)
@@ -448,6 +556,8 @@ bool Html5ApplicationViewer::show_wallet()
 
 void Html5ApplicationViewer::close_wallet()
 {
+  stop_rpc();
+
   m_backend.close_wallet();
 }
 
