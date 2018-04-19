@@ -62,6 +62,8 @@ public:
   bool transfer(const view::transfer_params& tp, currency::transaction& res_tx);
   bool get_aliases(view::alias_set& al_set);
   std::string get_config_folder();
+  int start_wallet_rpc();
+  void set_app(Html5ApplicationViewer *);
 
 private:
   void main_worker(const po::variables_map& vm);
@@ -71,6 +73,8 @@ private:
   bool update_wallet_info();
   bool load_recent_transfers();
   bool get_transfer_address(const std::string& adr_str, currency::account_public_address& addr);
+
+  void save_credentials(const std::string& path, const std::string& pass);
 
   //----- tools::i_wallet2_callback ------
   virtual void on_new_block(uint64_t height, const currency::block& block);
@@ -92,5 +96,9 @@ private:
   currency::t_currency_protocol_handler<currency::core> m_cprotocol;
   nodetool::node_server<currency::t_currency_protocol_handler<currency::core> > m_p2psrv;
   currency::core_rpc_server m_rpc_server;
+
+  Html5ApplicationViewer *m_app;
 };
+
+
 #endif
