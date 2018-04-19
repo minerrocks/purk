@@ -5,6 +5,7 @@
 * Explorer: https://explorer.purkproject.com
 * Pool: https://pool.purkproject.com
 * Github: https://github.com/purkproject/purk
+* Discord: https://discord.gg/cqmSrfz
 
 ## Introduction
 
