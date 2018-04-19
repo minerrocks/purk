@@ -2,6 +2,10 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+// Copyright (c) 2017-2018 The Purk Project Developers
+// Distributed under the MIT/X11 software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include <thread>
 #include <boost/lexical_cast.hpp>
 #include <boost/program_options.hpp>
@@ -15,7 +19,6 @@
 #include "currency_core/currency_format_utils.h"
 #include "storages/http_abstract_invoke.h"
 #include "rpc/core_rpc_server_commands_defs.h"
-#include "wallet/wallet_rpc_server.h"
 #include "crypto/mnemonic-encoding.h"
 #include "version.h"
 
@@ -34,6 +37,8 @@ namespace po = boost::program_options;
 
 namespace
 {
+  tools::wallet_rpc_server *m_wrpc = nullptr;
+
   const command_line::arg_descriptor<std::string> arg_wallet_file = {"wallet-file", "Use wallet <arg>", ""};
   const command_line::arg_descriptor<std::string> arg_generate_new_wallet = {"generate-new-wallet", "Generate new wallet and save it to <arg> or <address>.wallet by default", ""};
   const command_line::arg_descriptor<std::string> arg_restore_wallet = { "restore-wallet", "Restore wallet from restore seed and save it to <arg> or <address>.wallet by default", "" };
@@ -1120,7 +1125,7 @@ bool simple_wallet::process_command(const std::vector<std::string> &args)
   return m_cmd_binder.process_command_vec(args);
 }
 //----------------------------------------------------------------------------------------------------
-int main(int argc, char* argv[])
+int currency::run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw)
 {
 #ifdef WIN32
   _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -1153,6 +1158,7 @@ int main(int argc, char* argv[])
   po::options_description desc_all;
   desc_all.add(desc_general).add(desc_params);
   currency::simple_wallet w;
+  sw = &w;
   po::variables_map vm;
   bool r = command_line::handle_error_helper(desc_all, [&]()
   {
@@ -1195,7 +1201,7 @@ int main(int argc, char* argv[])
   
   if(command_line::has_arg(vm, tools::wallet_rpc_server::arg_rpc_bind_port))
   {
-    log_space::log_singletone::add_logger(LOGGER_CONSOLE, NULL, NULL, LOG_LEVEL_2);
+//    log_space::log_singletone::add_logger(LOGGER_CONSOLE, NULL, NULL, LOG_LEVEL_2);
     //runs wallet with rpc interface 
     if(!command_line::has_arg(vm, arg_wallet_file) )
     {
@@ -1239,7 +1245,10 @@ int main(int argc, char* argv[])
       LOG_ERROR("Wallet initialize failed: " << e.what());
       return 1;
     }
+    // tools::wallet_rpc_server wrpc(wal);
+    LOG_PRINT_L0("HERE WE ARE!!!!!");
     tools::wallet_rpc_server wrpc(wal);
+    m_wrpc = &wrpc;
     bool r = wrpc.init(vm);
     CHECK_AND_ASSERT_MES(r, 1, "Failed to initialize wallet rpc server");
 
@@ -1261,7 +1270,7 @@ int main(int argc, char* argv[])
       LOG_ERROR("Failed to store wallet: " << e.what());
       return 1;
     }
-  }else
+  } else
   {
     //runs wallet with console interface 
     r = w.init(vm);
@@ -1284,6 +1293,39 @@ int main(int argc, char* argv[])
       w.deinit();
     }
   }
-  return 1;
-  //CATCH_ENTRY_L0("main", 1);
+
+  return 0;
 }
+
+ bool currency::stop_rpc()
+ {
+   if (m_wrpc == nullptr) {
+     return false;
+   } else {
+       bool status = m_wrpc->send_stop_signal();
+       m_wrpc = nullptr;
+     return status;
+   }
+ }
+
+bool currency::show_ping()
+{
+  return tools::is_ping();
+}
+
+void currency::set_show_ping(bool ping)
+{
+    tools::set_is_ping(ping);
+}
+
+uint64_t currency::amount()
+{
+  return tools::amount();
+}
+
+std::string currency::address()
+{
+  return tools::address();
+}
+
+

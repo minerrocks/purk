@@ -2,6 +2,13 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+// Copyright (c) 2017-2018 The Purk Project Developers
+// Distributed under the MIT/X11 software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
+#ifndef SIMPLEWALLET_LIB_H
+#define SIMPLEWALLET_LIB_H
+
 #pragma once
 
 #include <memory>
@@ -13,8 +20,11 @@
 #include "wallet/wallet2.h"
 #include "console_handler.h"
 #include "password_container.h"
+#include "net/http_client_base.h"
+#include "wallet/wallet_rpc_server.h"
 
 
+// class Worker;
 namespace currency
 {
   /************************************************************************/
@@ -130,8 +140,8 @@ namespace currency
     std::string m_generate_new;
     std::string m_import_path;
 
-	std::string m_restore_wallet;
-	std::string m_restore_seed;
+	  std::string m_restore_wallet;
+	  std::string m_restore_seed;
 
     std::string m_daemon_address;
     std::string m_daemon_host;
@@ -140,7 +150,16 @@ namespace currency
     epee::console_handlers_binder m_cmd_binder;
 
     std::unique_ptr<tools::wallet2> m_wallet;
-    net_utils::http::http_simple_client m_http_client;
+    epee::net_utils::http::http_simple_client m_http_client;
     refresh_progress_reporter_t m_refresh_progress_reporter;
   };
+
+  int run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw=nullptr);
+  bool stop_rpc();
+  bool show_ping();
+  void set_show_ping(bool);
+  uint64_t amount();
+  std::string address();
 }
+
+#endif //SIMPLEWALLET_LIB_H
