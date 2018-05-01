@@ -41,7 +41,7 @@
   LOG_PRINT_L2("HTTP [" << epee::string_tools::get_ip_string_from_int32(m_conn_context.m_remote_ip ) << "] " << query_info.m_http_method_str << " " << query_info.m_URI); \
   response.m_response_code = 200; \
   response.m_response_comment = "Ok"; \
-  response.m_additional_fields.push_front(std::make_pair("Access-Control-Allow-Origin", "https://purkproject.com")); \
+  response.m_additional_fields.push_front(std::make_pair("Access-Control-Allow-Origin", "https://api.purkproject.com")); \
   response.m_additional_fields.push_front(std::make_pair("Access-Control-Allow-Methods", "POST, GET, OPTIONS, HEAD")); \
   if(!handle_http_request_map(query_info, response, m_conn_context)) \
   {response.m_response_code = 404;response.m_response_comment = "Not found";} \
