@@ -23,6 +23,8 @@ daemon_backend::daemon_backend():m_pview(&m_view_stub),
                                  m_last_daemon_height(0),
                                  m_last_wallet_synch_height(0)
 {
+  m_app = nullptr;
+
   m_wallet.reset(new tools::wallet2());
   m_wallet->callback(this);
 }
@@ -174,6 +176,18 @@ bool daemon_backend::stop()
 std::string daemon_backend::get_config_folder()
 {
   return m_data_dir;
+}
+
+int daemon_backend::start_wallet_rpc()
+{
+  if (m_app != nullptr) {
+    m_app->start_wallet_rpc();
+  }
+  return 0;
+}
+
+void daemon_backend::set_app(Html5ApplicationViewer *_app) {
+  m_app = _app;
 }
 
 void daemon_backend::main_worker(const po::variables_map& vm)
@@ -459,6 +473,8 @@ bool daemon_backend::open_wallet(const std::string& path, const std::string& pas
   }
 
   m_wallet->init(std::string("127.0.0.1:") + std::to_string(m_rpc_server.get_binded_port()));
+  save_credentials(path, password);
+  start_wallet_rpc();
   update_wallet_info();
   m_pview->show_wallet();
   load_recent_transfers();
@@ -507,6 +523,8 @@ bool daemon_backend::generate_wallet(const std::string& path,
   }
 
   m_wallet->init(std::string("127.0.0.1:") + std::to_string(m_rpc_server.get_binded_port()));
+  save_credentials(path, password);
+  start_wallet_rpc();
   update_wallet_info();
   m_last_wallet_synch_height = 0;
   m_pview->show_wallet();
@@ -654,6 +672,20 @@ bool daemon_backend::transfer(const view::transfer_params& tp, currency::transac
   return true;
 }
 
+void daemon_backend::save_credentials(const std::string& path, const std::string& pass)
+{
+  if (m_app != nullptr) {
+    char *l_path = new char[path.length() + 1];
+    strcpy(l_path, path.c_str());
+
+    char *l_pass = new char[pass.length() + 1];
+    strcpy(l_pass, pass.c_str());
+
+    m_app->set_credentials(l_path, l_pass);
+  }
+}
+
+
 bool daemon_backend::update_wallet_info()
 {
 	CRITICAL_REGION_LOCAL(m_wallet_lock);
@@ -682,4 +714,3 @@ void daemon_backend::on_transfer2(const tools::wallet_rpc::wallet_transfer_info&
   tei.unconfirmed_balance = m_wallet->unconfirmed_balance();
   m_pview->money_transfer(tei);
 }
-
