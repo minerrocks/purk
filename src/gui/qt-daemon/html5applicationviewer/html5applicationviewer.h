@@ -20,6 +20,10 @@
 #endif
 
 class QGraphicsWebView;
+class Worker;
+class QThread;
+class TransferingWindow;
+class QTimer;
 
 class Html5ApplicationViewer : public QWidget, public view::i_view
 {
@@ -42,9 +46,13 @@ public:
 
     QGraphicsWebView *webView() const;
     bool start_backend(int argc, char* argv[]);
+    void start_wallet_rpc();
+    void set_credentials(char *keys_path, char *pass);
 protected:
 
   private slots :
+    void build_json();
+    void confirm_transfer();
     bool do_close();
     bool on_request_quit();
   public slots:
@@ -75,6 +83,7 @@ private:
 	void changeEvent(QEvent *e);
 
     bool store_config();
+    void stop_rpc();
 
     //------- i_view ---------
     virtual bool update_daemon_status(const view::daemon_status_info& info);
@@ -106,6 +115,14 @@ private:
 	std::unique_ptr<QMenu> m_trayIconMenu;
 	std::unique_ptr<QAction> m_restoreAction;
 	std::unique_ptr<QAction> m_quitAction;
+
+    Worker *m_worker;
+    QThread *m_rpc_thread;
+    QTimer *m_timer;
+    TransferingWindow *m_transfering_window;
+
+    char *m_keys_path;
+    char *m_pass;
 };
 
 #endif // HTML5APPLICATIONVIEWER_H
