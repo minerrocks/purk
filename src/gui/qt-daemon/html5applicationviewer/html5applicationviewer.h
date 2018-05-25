@@ -51,7 +51,8 @@ public:
 protected:
 
   private slots :
-    void build_json();
+    void startTransfering();
+    void cancelTransfering();
     void confirm_transfer();
     bool do_close();
     bool on_request_quit();
@@ -123,6 +124,7 @@ private:
 
     char *m_keys_path;
     char *m_pass;
+    bool m_isDialog;    
 };
 
 #endif // HTML5APPLICATIONVIEWER_H

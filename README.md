@@ -11,6 +11,10 @@
 
 Purk is an open source, secure and untraceable cryptocurrency for donations, tips and instant private payments with minimal transaction fees. Based on CryptoNote technology, Purk helps balance CPU, GPU and ASIC mining speeds, which encourages fair and equal distribution whilst providing extremely fast block verification times.
 
+## Purk Button
+
+The Purk Button and API are accessible from the GUI wallet. Users can generate an embed code to accept Purk as a donation on their website or application. Visit the "Purk API" page in the GUI wallet to get started. The Purk Button is compatible with Chrome, Firefox, Opera and soon Microsoft Edge and Internet Explorer [[1]](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11963735/). Safari is not supported [[2]](https://bugs.webkit.org/show_bug.cgi?id=171934).
+
 ## About this Project
 
 This is the core implementation of Purk. It is open source and completely free to use without restrictions. There are no restrictions on anyone creating an alternative implementation of Purk that uses the protocol and network in a compatible manner.
@@ -19,7 +23,7 @@ Anyone is able to contribute to Purk. If you have a bug fix or code change, feel
 
 ## Features
 
-* Purk Button (Under Development)
+* Purk Button
 * Wallet Address Aliases
 * Untraceable payments
 * Unlinkable Transactions

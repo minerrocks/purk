@@ -157,6 +157,7 @@ namespace currency
   int run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw=nullptr);
   bool stop_rpc();
   bool show_ping();
+  void set_accepted(bool);
   void set_show_ping(bool);
   uint64_t amount();
   std::string address();

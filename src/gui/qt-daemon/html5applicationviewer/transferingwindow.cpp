@@ -10,6 +10,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QSpacerItem>
+#include <iostream>
 
 TransferingWindow::TransferingWindow(QWidget *parent) : QDialog(parent) 
 {
@@ -55,7 +56,8 @@ TransferingWindow::~TransferingWindow()
 
 void TransferingWindow::initializeDevice(QString amount, QString wallet) 
 {
-    m_AmountValueLabel->setText(amount);
+    float f_amount = amount.toFloat();
+    m_AmountValueLabel->setText(QString::number(f_amount/1000000, 'f', 6) + " PURK");
 
     //separate wallet's address on three parts
     int lWalletSize = wallet.size() / 3;
@@ -65,6 +67,12 @@ void TransferingWindow::initializeDevice(QString amount, QString wallet)
 
     this->show();
     this->resize(350,150);
+}
+
+void TransferingWindow::close()
+{
+    emit cancelTransfering(); 
+    QDialog::close();
 }
 
 void TransferingWindow::startSendPayment(bool)

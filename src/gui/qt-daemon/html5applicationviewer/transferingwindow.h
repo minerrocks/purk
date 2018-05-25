@@ -25,8 +25,10 @@ public:
     void initializeDevice(QString amount, QString wallet);
 signals:
     void startTransfering();
+    void cancelTransfering();
 public slots:
     void startSendPayment(bool);
+    void close();
 private:
     QLabel *m_AmountValueLabel;
     QLabel *m_AmountTextLabel;

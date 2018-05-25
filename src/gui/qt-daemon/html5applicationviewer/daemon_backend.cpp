@@ -714,3 +714,4 @@ void daemon_backend::on_transfer2(const tools::wallet_rpc::wallet_transfer_info&
   tei.unconfirmed_balance = m_wallet->unconfirmed_balance();
   m_pview->money_transfer(tei);
 }
+

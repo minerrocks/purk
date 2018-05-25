@@ -350,6 +350,7 @@ html {
  #lock_time, #transfer_amount_id {
     font-size: 12px;
      padding:5px;
+     margin-left: 0px!important;
 }
  #close_wallet_button_id {
     margin-left: 505px;
@@ -381,4 +382,62 @@ html {
  .my_addres_text {
      font-size: 80%;
      color: #666666;
+}
+#donate_form {
+    font-family:Montserrat-Regular;
+}
+ #donate_form label, #donate_form input {
+    display:block;
+}
+ #donate_form input[type="text"], #donate_form input[type="url"] {
+    height: 16px;
+    padding: 5px;
+    width: 570px;
+    font-size: 12px;
+}
+ #donate_form .form-group {
+    display:block;
+    margin-bottom:15px;
+}
+ #donate_form #urlHelp, #donate_form label {
+    display:block;
+    margin:10px 0px;
+}
+#donate_form select {
+   font-size: 12px!important;
+   font-weight: 400!important;
+   border: 1px solid #ddd;
+}
+ .button-row {
+    background:#fff;
+    border:1px solid #ddd;
+    padding:15px;
+    width: auto;
+    display:block;
+    display:inline-block;
+    margin-bottom:15px;
+}
+#donate_button_form_go_back {
+   margin-top: 20px;
+   clear: both;
+   display: block;
+   width: 90px;
+}
+#donate_form code {
+   font-weight: 400;
+   padding: 8px;
+   font-size: 14px;
+   line-height: 25px;
+   color: #c7254e;
+   background-color: #f9f2f4;
+   display: block;
+   border: 1px solid #ddd;
+   font-family: Montserrat-Regular;
+}
+
+#website-url.error {
+    border: 1px solid red;
+}
+#post-btn.ui-state-focus {
+    color: #fff;
 }

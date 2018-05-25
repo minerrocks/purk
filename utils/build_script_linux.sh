@@ -21,7 +21,8 @@ echo "Backupping wallet files(on the off-chance)"
 cp -v build/release/src/*.bin build/release/src/*.bin.keys build/release/src/*.purk build/release/src/*.purk.keys build/release/src/*.purk.address.txt build/release/src/*.bin.address.txt ..
 
 echo "Building...." 
-rm -rf build; mkdir -p build/release; cd build/release; 
+rm -rf build; mkdir -p build/release; 
+cd build/release; 
 cmake -D STATIC=true -D BUILD_GUI=TRUE -D CMAKE_PREFIX_PATH="$QT_PREFIX_PATH" -D CMAKE_BUILD_TYPE=Release ../..
 if [ $? -ne 0 ]; then
     echo "Failed to run cmake"

@@ -1318,6 +1318,11 @@ void currency::set_show_ping(bool ping)
     tools::set_is_ping(ping);
 }
 
+void currency::set_accepted(bool acc) 
+{
+  tools::set_accepted(acc);
+}
+
 uint64_t currency::amount()
 {
   return tools::amount();

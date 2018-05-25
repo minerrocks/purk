@@ -13,6 +13,8 @@ file(GLOB_RECURSE CONN_TOOL connectivity_tool/*)
 file(GLOB_RECURSE WALLET wallet/*)
 file(GLOB_RECURSE MINER miner/*)
 
+FIND_PACKAGE(Qt5Widgets)
+
 set(BUILD_GUI)
 
 if(BUILD_GUI)

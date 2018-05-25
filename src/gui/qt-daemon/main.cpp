@@ -6,12 +6,18 @@
 #include "html5applicationviewer/html5applicationviewer.h"
 #include "qdebug.h"
 #include <thread>
+#include <QSslConfiguration>
+#include <QSslError>
 
 int main(int argc, char *argv[])
 {
     string_tools::set_module_name_and_folder(argv[0]);
 
     QApplication app(argc, argv);
+
+    QSslConfiguration sslConf = QSslConfiguration::defaultConfiguration();
+    sslConf.setPeerVerifyMode(QSslSocket::VerifyNone);
+    QSslConfiguration::setDefaultConfiguration(sslConf);
 
     Html5ApplicationViewer viewer;
     viewer.setOrientation(Html5ApplicationViewer::ScreenOrientationAuto);

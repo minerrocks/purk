@@ -94,6 +94,15 @@ Html5ApplicationViewerPrivate::Html5ApplicationViewerPrivate(QWidget *parent)
   //setAttribute(Qt::WA_AcceptTouchEvents, true);
   scene->addItem(m_webView);
   scene->setActiveWindow(m_webView);
+  auto settings = m_webView->settings();
+  settings->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls,true);
+  settings->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, true);
+
+  // QList<QSslError> expectedSslErrors; 
+  // expectedSslErrors.append(QSslError::SelfSignedCertificate); 
+  // expectedSslErrors.append(QSslError::CertificateUntrusted);
+  // reply->ignoreSslErrors(expectedSslErrors);
+
 #ifdef TOUCH_OPTIMIZED_NAVIGATION
   m_controller = new NavigationController(parent, m_webView);
 #endif // TOUCH_OPTIMIZED_NAVIGATION
@@ -147,7 +156,8 @@ m_rpc_thread{nullptr},
 m_transfering_window{nullptr},
 m_keys_path{nullptr},
 m_pass{nullptr},
-m_timer{nullptr}
+m_timer{nullptr},
+m_isDialog{false}
 {
   //connect(m_d, SIGNAL(quitRequested()), SLOT(close()));
 
@@ -383,28 +393,41 @@ bool Html5ApplicationViewer::do_close()
   return true;
 }
 
-void Html5ApplicationViewer::build_json() 
+void Html5ApplicationViewer::startTransfering()
 {
-  int lAmount = currency::amount();
-  QString lAddress = QString::fromStdString(currency::address());
-  transfer(JsonBuilder::buildJsonInStringForm(lAmount, lAddress));
+  currency::set_accepted(true);
+  currency::set_show_ping(false);  
+
+  m_isDialog = false;
 }
+
+void Html5ApplicationViewer::cancelTransfering()
+{
+  currency::set_accepted(false);
+  currency::set_show_ping(false);  
+
+  m_isDialog = false;
+}
+
 void Html5ApplicationViewer::confirm_transfer()
 {
-  if (currency::show_ping()) {
+  if (currency::show_ping() && !m_isDialog) {
     if (m_transfering_window != nullptr) {
       delete m_transfering_window;
     }
     m_transfering_window = new TransferingWindow(this);
 
-    connect(m_transfering_window, SIGNAL(startTransfering()), this, SLOT(build_json()));    
+    connect(m_transfering_window, SIGNAL(startTransfering()), this, SLOT(startTransfering()));    
+    connect(m_transfering_window, SIGNAL(cancelTransfering()), this, SLOT(cancelTransfering()));
     QString lAmount = QString::number(currency::amount());
     QString lAddress = QString::fromStdString(currency::address());
     m_transfering_window->initializeDevice(lAmount, lAddress);
 
+    m_isDialog = true;
+
 //    m_transfering_window->move(this->pos() + this->rect().center() - QPoint(175, 100));
       
-    currency::set_show_ping(false);
+//    currency::set_show_ping(false);
   }
 }
 
