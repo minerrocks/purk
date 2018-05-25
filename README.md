@@ -13,7 +13,7 @@ Purk is an open source, secure and untraceable cryptocurrency for donations, tip
 
 ## Purk Button
 
-The Purk Button and API are accessible from the GUI wallet. Users can generate an embed code to accept Purk as a donation on their website or application. Visit the "Purk API" page in the GUI wallet to get started. The Purk Button is compatible with Chrome, Firefox, Opera and soon Microsoft Edge and Internet Explorer [[1]](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11963735/). Safari is not supported [[2]](https://bugs.webkit.org/show_bug.cgi?id=171934).
+The Purk Button API is accessible from the GUI wallet. Users can generate an embed code to accept Purk as a donation on their website or application. Visit the "Purk API" page in the GUI wallet to get started. The Purk Button is compatible with Chrome, Firefox, Opera and soon Microsoft Edge and Internet Explorer [[1]](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11963735/). Safari is not supported [[2]](https://bugs.webkit.org/show_bug.cgi?id=171934).
 
 ## About this Project
 
