@@ -4,6 +4,7 @@
 * Docs: https://docs.purkproject.com
 * Explorer: https://explorer.purkproject.com
 * Pool: https://pool.purkproject.com
+* Donate: https://donate.purkproject.com
 * Github: https://github.com/purkproject/purk
 * Discord: https://discord.gg/cqmSrfz
 
