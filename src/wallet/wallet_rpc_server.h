@@ -83,6 +83,7 @@ namespace tools
   bool is_ping();
   void set_is_ping(bool);
   void set_accepted(bool);
+  void set_confirmation_dialog(bool);
   uint64_t amount();
   std::string address();
 }

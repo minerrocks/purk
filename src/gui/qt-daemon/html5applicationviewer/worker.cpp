@@ -33,5 +33,6 @@ void Worker::mainLoop()
 {
     qDebug()<<"Starting worker mainLoop in Thread "<<thread()->currentThreadId();
 
+    tools::set_confirmation_dialog(true);
     currency::run_wallet_rpc(m_argc, m_argv);
 }

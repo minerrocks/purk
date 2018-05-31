@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[])
 {
+  tools::set_confirmation_dialog(false);  
   return currency::run_wallet_rpc(argc, argv);
   //CATCH_ENTRY_L0("main", 1);
 }

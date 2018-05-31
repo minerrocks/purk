@@ -23,13 +23,7 @@ namespace tools
   std::string m_address = "";
 
   bool m_accepted = false;
-
-  // const wallet_rpc::COMMAND_RPC_SEND_PAYMENT::request& m_req;
-  // wallet_rpc::COMMAND_RPC_SEND_PAYMENT::response& m_res;
-  // epee::json_rpc::error& m_er, 
-  // connection_context& m_cntx;
-
-  // wallet_rpc_server *m_wallet_rpc;
+  volatile bool m_confirmation_dialog = false;
 
   //-----------------------------------------------------------------------------------
   const command_line::arg_descriptor<std::string> wallet_rpc_server::arg_rpc_bind_port = {"rpc-bind-port", "Starts wallet as rpc server for wallet operations, sets bind port for server", "", true};
@@ -131,7 +125,8 @@ namespace tools
   //------------------------------------------------------------------------------------------------------------------------------
   bool wallet_rpc_server::on_transfer(const wallet_rpc::COMMAND_RPC_TRANSFER::request& req, wallet_rpc::COMMAND_RPC_TRANSFER::response& res, epee::json_rpc::error& er, connection_context& cntx)
   {
-    if (req.destinations.size() > 0) {
+    if (m_confirmation_dialog) { //this implementation is for GUI wallet only, use method set_confiramtion_dialog, by default it's false
+      if (req.destinations.size() > 0) {
         m_show = true;
       
         m_address = req.destinations.begin()->address;
@@ -144,6 +139,7 @@ namespace tools
           er.message = "Payment was rejected";
           return false; 
         }      
+      }
     }
 
     std::vector<currency::tx_destination_entry> dsts;
@@ -568,6 +564,11 @@ namespace tools
   void set_accepted(bool acc)
   {
       m_accepted = acc;
+  }
+
+  void set_confirmation_dialog(bool acc)
+  {
+    m_confirmation_dialog = acc;
   }
 
   uint64_t amount()

@@ -424,10 +424,6 @@ void Html5ApplicationViewer::confirm_transfer()
     m_transfering_window->initializeDevice(lAmount, lAddress);
 
     m_isDialog = true;
-
-//    m_transfering_window->move(this->pos() + this->rect().center() - QPoint(175, 100));
-      
-//    currency::set_show_ping(false);
   }
 }
 
