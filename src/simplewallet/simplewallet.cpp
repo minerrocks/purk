@@ -356,7 +356,9 @@ bool simple_wallet::restore_wallet(const std::string &wallet_file, const std::st
 	try
 	{
 		std::vector<unsigned char> seed = crypto::mnemonic_encoding::text2binary(restore_seed);
-		m_wallet->restore(wallet_file, seed, password);
+
+      m_wallet->flag_restore_from_zero = true;
+      m_wallet->restore(wallet_file, seed, password);
 		message_writer(epee::log_space::console_color_white, true) << "Wallet restored: " << m_wallet->get_account().get_public_address_str() << std::endl << "view key: " << string_tools::pod_to_hex(m_wallet->get_account().get_keys().m_view_secret_key);
 	}
 	catch (const std::exception& e)
@@ -538,6 +540,7 @@ bool simple_wallet::refresh(const std::vector<std::string>& args)
     // Clear line "Height xxx of xxx"
     std::cout << "\r                                                                \r";
     success_msg_writer(true) << "Refresh done, blocks received: " << fetched_blocks;
+    m_wallet->flag_restore_from_zero = false;
     show_balance();
   }
   catch (const tools::error::daemon_busy&)
@@ -1332,5 +1335,3 @@ std::string currency::address()
 {
   return tools::address();
 }
-
-

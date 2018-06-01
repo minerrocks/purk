@@ -66,6 +66,11 @@ namespace tools
   public:
     wallet2() : m_run(true), m_callback(0), m_core_proxy(new default_http_core_proxy()), m_unconfirmed_balance(0)
     {};
+
+      /**
+       * Set this flag if wallet was run with --restore-wallet command line argument.
+       */
+      bool flag_restore_from_zero = false;
     struct transfer_details
     {
       uint64_t m_block_height;
