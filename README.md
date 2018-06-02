@@ -94,5 +94,6 @@ Good luck!
 
 ## Donate
 
+* Donate: https://donate.purkproject.com
 * PURK: @purkproject
 * BTC: 16irMH3VZEKxZ4h3ZZq2NhGUfNskG6u61o
