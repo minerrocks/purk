@@ -1,3 +1,4 @@
+
 ## Resources
 
 * Website: https://purkproject.com
@@ -45,9 +46,52 @@ Anyone is able to contribute to Purk. If you have a bug fix or code change, feel
 
 ## Deployment
 
-### Unix and MacOS X
+### Linux
 
-Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.53(but don't use 1.54) or later. You may download them from:
+Tested on Ubuntu 14.04.5 x64. Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
+
+* http://gcc.gnu.org/
+* http://www.cmake.org/
+* http://www.boost.org/
+
+**Get Required Libraries**
+
+`sudo apt-get update`
+`sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev build-essential libbz2-dev cmake git`
+
+**Install GCC 4.8**
+
+`sudo add-apt-repository ppa:ubuntu-toolchain-r/test`
+`sudo apt update`
+`sudo apt install gcc-4.8`
+`sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50`
+`sudo apt install g++-4.8`
+`sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50`
+
+**Install Boost**
+
+`mkdir tmp`
+`cd tmp`
+`wget -O boost_1_55_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.gz/download`
+`tar xzvf boost_1_55_0.tar.gz`
+`cd boost_1_55_0/`
+`./bootstrap.sh --with-libraries=system,filesystem,serialization,program_options,date_time,thread,regex,atomic,iostreams,log,locale,wave --prefix=/usr/local`
+`sudo ./b2 install`
+`sudo sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf'`
+`sudo ldconfig`
+
+**Git Clone**
+
+`git clone https://github.com/purkproject/purk.git`
+
+**Compile Purk**
+
+`cd purk`
+`make`
+
+###  MacOS X
+
+Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
 
 * http://gcc.gnu.org/
 * http://www.cmake.org/
@@ -76,7 +120,7 @@ Building with Clang: it may be possible to use Clang instead of GCC, but this ma
 
 ### Windows
 
-Dependencies: MSVC 2012 or later, CMake 2.8.6 or later, and Boost 1.53(but don't use 1.54) or later. You may download them from:
+Dependencies: MSVC 2012 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
 
 * http://www.microsoft.com/
 * http://www.cmake.org/
