@@ -54,7 +54,7 @@ Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55 or later.
 * http://www.cmake.org/
 * http://www.boost.org/
 
-Alternatively, you can follow the command line tutorial ibelow. Tested on Ubuntu 14.04.5 x64. 
+Alternatively, you can follow the command line tutorial below. Tested on Ubuntu 14.04.5 x64. 
 
 **Get Required Libraries**
 
