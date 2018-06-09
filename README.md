@@ -56,29 +56,35 @@ Tested on Ubuntu 14.04.5 x64. Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or l
 
 **Get Required Libraries**
 
-`sudo apt-get update`
-`sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev build-essential libbz2-dev cmake git`
+```
+sudo apt-get update
+sudo apt-get install build-essential g++ python-dev autotools-dev libicu-dev build-essential libbz2-dev cmake git
+```
 
 **Install GCC 4.8**
 
-`sudo add-apt-repository ppa:ubuntu-toolchain-r/test`
-`sudo apt update`
-`sudo apt install gcc-4.8`
-`sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50`
-`sudo apt install g++-4.8`
-`sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50`
+```
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+sudo apt update
+sudo apt install gcc-4.8
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+sudo apt install g++-4.8
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+```
 
 **Install Boost**
 
-`mkdir tmp`
-`cd tmp`
-`wget -O boost_1_55_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.gz/download`
-`tar xzvf boost_1_55_0.tar.gz`
-`cd boost_1_55_0/`
-`./bootstrap.sh --with-libraries=system,filesystem,serialization,program_options,date_time,thread,regex,atomic,iostreams,log,locale,wave --prefix=/usr/local`
-`sudo ./b2 install`
-`sudo sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf'`
-`sudo ldconfig`
+```
+mkdir tmp
+cd tmp
+wget -O boost_1_55_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.gz/download
+tar xzvf boost_1_55_0.tar.gz
+cd boost_1_55_0/
+./bootstrap.sh --with-libraries=system,filesystem,serialization,program_options,date_time,thread,regex,atomic,iostreams,log,locale,wave --prefix=/usr/local
+sudo ./b2 install
+sudo sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf'
+sudo ldconfig
+```
 
 **Git Clone**
 
@@ -86,8 +92,10 @@ Tested on Ubuntu 14.04.5 x64. Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or l
 
 **Compile Purk**
 
-`cd purk`
-`make`
+```
+cd purk
+make
+```
 
 ###  MacOS X
 
