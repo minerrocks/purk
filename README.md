@@ -48,11 +48,13 @@ Anyone is able to contribute to Purk. If you have a bug fix or code change, feel
 
 ### Linux
 
-Tested on Ubuntu 14.04.5 x64. Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
+Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
 
 * http://gcc.gnu.org/
 * http://www.cmake.org/
 * http://www.boost.org/
+
+Alternatively, you can follow the command line tutorial ibelow. Tested on Ubuntu 14.04.5 x64. 
 
 **Get Required Libraries**
 
