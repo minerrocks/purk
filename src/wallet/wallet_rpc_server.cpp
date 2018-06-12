@@ -227,7 +227,8 @@ namespace tools
 
     res.payments.clear();
     std::list<wallet2::payment_details> payment_list;
-    m_wallet.get_payments(payment_id, payment_list);
+//    m_wallet.get_payments(payment_id, payment_list);
+      m_wallet.get_payments_by_id(payment_id, payment_list);
     for (auto & payment : payment_list)
     {
       wallet_rpc::payment_details rpc_payment;

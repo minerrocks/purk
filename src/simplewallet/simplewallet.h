@@ -27,12 +27,12 @@
 // class Worker;
 namespace currency
 {
-  /************************************************************************/
-  /*                                                                      */
-  /************************************************************************/
-  class simple_wallet : public tools::i_wallet2_callback
-  {
-  public:
+/************************************************************************/
+/*                                                                      */
+/************************************************************************/
+class simple_wallet : public tools::i_wallet2_callback
+{
+public:
     typedef std::vector<std::string> command_type;
 
     simple_wallet();
@@ -44,7 +44,7 @@ namespace currency
     //wallet *create_wallet();
     bool process_command(const std::vector<std::string> &args);
     std::string get_commands_str();
-  private:
+private:
     void handle_command_line(const boost::program_options::variables_map& vm);
 
     bool run_console_handler();
@@ -70,7 +70,10 @@ namespace currency
     bool print_address(const std::vector<std::string> &args = std::vector<std::string>());
     bool save(const std::vector<std::string> &args);
     bool set_log(const std::vector<std::string> &args);
-    
+
+    bool suminput(const std::vector<std::string>& args);
+    bool consolidateinputs(const std::vector<std::string>& args);
+
     bool get_alias_from_daemon(const std::string& alias_name, currency::alias_info_base& ai);
     bool get_transfer_address(const std::string& adr_str, currency::account_public_address& addr);
 
@@ -88,60 +91,60 @@ namespace currency
     class refresh_progress_reporter_t
     {
     public:
-      refresh_progress_reporter_t(currency::simple_wallet& simple_wallet)
-        : m_simple_wallet(simple_wallet)
-        , m_blockchain_height(0)
-        , m_blockchain_height_update_time()
-        , m_print_time()
-      {
-      }
-
-      void update(uint64_t height, bool force = false)
-      {
-        auto current_time = std::chrono::system_clock::now();
-        if (std::chrono::seconds(DIFFICULTY_TARGET / 2) < current_time - m_blockchain_height_update_time || m_blockchain_height <= height)
+        refresh_progress_reporter_t(currency::simple_wallet& simple_wallet)
+            : m_simple_wallet(simple_wallet)
+            , m_blockchain_height(0)
+            , m_blockchain_height_update_time()
+            , m_print_time()
         {
-          update_blockchain_height();
-          m_blockchain_height = (std::max)(m_blockchain_height, height);
         }
 
-        if (std::chrono::milliseconds(1) < current_time - m_print_time || force)
+        void update(uint64_t height, bool force = false)
         {
-          std::cout << "Height " << height << " of " << m_blockchain_height << '\r';
-          m_print_time = current_time;
+            auto current_time = std::chrono::system_clock::now();
+            if (std::chrono::seconds(DIFFICULTY_TARGET / 2) < current_time - m_blockchain_height_update_time || m_blockchain_height <= height)
+            {
+                update_blockchain_height();
+                m_blockchain_height = (std::max)(m_blockchain_height, height);
+            }
+
+            if (std::chrono::milliseconds(1) < current_time - m_print_time || force)
+            {
+                std::cout << "Height " << height << " of " << m_blockchain_height << '\r';
+                m_print_time = current_time;
+            }
         }
-      }
 
     private:
-      void update_blockchain_height()
-      {
-        std::string err;
-        uint64_t blockchain_height = m_simple_wallet.get_daemon_blockchain_height(err);
-        if (err.empty())
+        void update_blockchain_height()
         {
-          m_blockchain_height = blockchain_height;
-          m_blockchain_height_update_time = std::chrono::system_clock::now();
+            std::string err;
+            uint64_t blockchain_height = m_simple_wallet.get_daemon_blockchain_height(err);
+            if (err.empty())
+            {
+                m_blockchain_height = blockchain_height;
+                m_blockchain_height_update_time = std::chrono::system_clock::now();
+            }
+            else
+            {
+                LOG_ERROR("Failed to get current blockchain height: " << err);
+            }
         }
-        else
-        {
-          LOG_ERROR("Failed to get current blockchain height: " << err);
-        }
-      }
 
     private:
-      currency::simple_wallet& m_simple_wallet;
-      uint64_t m_blockchain_height;
-      std::chrono::system_clock::time_point m_blockchain_height_update_time;
-      std::chrono::system_clock::time_point m_print_time;
+        currency::simple_wallet& m_simple_wallet;
+        uint64_t m_blockchain_height;
+        std::chrono::system_clock::time_point m_blockchain_height_update_time;
+        std::chrono::system_clock::time_point m_print_time;
     };
 
-  private:
+private:
     std::string m_wallet_file;
     std::string m_generate_new;
     std::string m_import_path;
 
-	  std::string m_restore_wallet;
-	  std::string m_restore_seed;
+    std::string m_restore_wallet;
+    std::string m_restore_seed;
 
     std::string m_daemon_address;
     std::string m_daemon_host;
@@ -152,15 +155,15 @@ namespace currency
     std::unique_ptr<tools::wallet2> m_wallet;
     epee::net_utils::http::http_simple_client m_http_client;
     refresh_progress_reporter_t m_refresh_progress_reporter;
-  };
+};
 
-  int run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw=nullptr);
-  bool stop_rpc();
-  bool show_ping();
-  void set_accepted(bool);
-  void set_show_ping(bool);
-  uint64_t amount();
-  std::string address();
+int run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw=nullptr);
+bool stop_rpc();
+bool show_ping();
+void set_accepted(bool);
+void set_show_ping(bool);
+uint64_t amount();
+std::string address();
 }
 
 #endif //SIMPLEWALLET_LIB_H
