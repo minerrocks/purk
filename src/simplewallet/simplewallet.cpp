@@ -269,6 +269,13 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
     message_writer(epee::log_space::console_color_green, true) << "details:";
     uint64_t count{0};
     std::vector<uint64_t>blocks_amount;
+
+    if (temp_selected_transfers.size() > 50) {
+        message_writer(epee::log_space::console_color_red, false) << "Attention: only 50 blocks can be consolidated at once!!!";
+        message_writer(epee::log_space::console_color_cyan, false) << "You will be able to perform consolidate command again when current consolidation process is complete...";
+    }
+
+    size_t tx_count{0};
     for (auto it : temp_selected_transfers) {
         message_writer(epee::log_space::console_color_blue, false) << "block: [" << count++ << "]";
 
@@ -286,10 +293,13 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
         message_writer(epee::log_space::console_color_magenta, false) << "\ttransactions: " << transaction_block.size();
         message_writer(epee::log_space::console_color_magenta, false) << "\t  total size: " << block_size << "b (" << (block_size / 1024.0f) << "Kb)";
         message_writer(epee::log_space::console_color_magenta, false) << "\ttotal amount: " << print_money(block_amount) << " PURK";
+        tx_count++;
+        if (tx_count > 50)
+            break;
     }
 
     if (temp_selected_transfers.size() == 0) {
-        message_writer(epee::log_space::console_color_yellow, true) << "There are no blocks for consolidation...";
+        message_writer(epee::log_space::console_color_yellow, true) << "There are no blocks available for consolidation...";
         return true;
     }
 
@@ -304,6 +314,11 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
 
         for (auto selected_transfers : temp_selected_transfers) {
             double_t fee = std::ceil(blocks_amount[block_count] * 0.05);
+            // Check if fee is not less than minimum available
+            if (fee < TX_POOL_MINIMUM_FEE) {
+                fee = TX_POOL_MINIMUM_FEE;
+            }
+
             std::vector<currency::tx_destination_entry> dsts = {
                 currency::tx_destination_entry(blocks_amount[block_count] - fee, m_wallet->get_account_public_address())
             };
@@ -330,6 +345,8 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
                 continue;
             }
             block_count++;
+            if (block_count > 50)
+                break;
         }
     }
 
@@ -1462,5 +1479,3 @@ std::string currency::address()
 {
     return tools::address();
 }
-
-
