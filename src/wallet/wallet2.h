@@ -629,9 +629,9 @@ void wallet2::transfer(const std::vector<currency::tx_destination_entry>& dsts,
 
     crypto::hash txid = get_transaction_hash(_transaction);
 
-        std::cout << "txid hash: " << txid << std::endl;
-        std::cout << "txkey pub: " <<  txkey.pub << std::endl;
-        std::cout << "txkey sec: " << txkey.sec << std::endl;
+//        std::cout << "txid hash: " << txid << std::endl;
+//        std::cout << "txkey pub: " <<  txkey.pub << std::endl;
+//        std::cout << "txkey sec: " << txkey.sec << std::endl;
 
     m_tx_keys.insert(std::make_pair(txid, txkey.sec));
     

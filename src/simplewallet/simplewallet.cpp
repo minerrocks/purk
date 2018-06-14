@@ -266,16 +266,11 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
                                                                   << total_size_bytes << "b ("
                                                                   << (total_size_bytes / 1024.0f) << "Kb)";
 
-    message_writer(epee::log_space::console_color_green, true) << "details:";
     uint64_t count{0};
     std::vector<uint64_t>blocks_amount;
 
-    if (temp_selected_transfers.size() > 50) {
-        message_writer(epee::log_space::console_color_red, false) << "Attention: only 50 blocks can be consolidated at once!!!";
-        message_writer(epee::log_space::console_color_cyan, false) << "You will be able to perform consolidate command again when current consolidation process is complete...";
-    }
-
     size_t tx_count{0};
+    uint64_t consolidate_total_amount{0};
     for (auto it : temp_selected_transfers) {
         message_writer(epee::log_space::console_color_blue, false) << "block: [" << count++ << "]";
 
@@ -287,6 +282,7 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
             block_size += get_object_blobsize(td.m_tx);
             block_amount += td.amount();
         }
+        consolidate_total_amount += block_amount;
         blocks_amount.push_back(block_amount);
         total_fee += std::ceil(block_amount * 0.05);
 
@@ -303,9 +299,16 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
         return true;
     }
 
+    if (temp_selected_transfers.size() > 0) {
+        message_writer(epee::log_space::console_color_red, true) << "Attention: only 50 blocks can be consolidated at once!!!";
+        message_writer(epee::log_space::console_color_cyan, true) << "You will be able to consolidate again when current consolidation process is complete...";
+    }
+
     std::string user_input;
-    message_writer(epee::log_space::console_color_blue, true) << "You will be charged a fee: " << print_money(uint64_t(total_fee)) << " PURK";
+    message_writer(epee::log_space::console_color_magenta, true) << "Amount: " << print_money(uint64_t(consolidate_total_amount)) << " PURK";
+    message_writer(epee::log_space::console_color_magenta, true) << "You will be charged a fee: " << print_money(uint64_t(total_fee)) << " PURK";
     message_writer(epee::log_space::console_color_cyan, true) << "Do you want to consolidate these blocks? (yes/no):";
+
     std::cin >> user_input;
 
     if (user_input == "yes") {
