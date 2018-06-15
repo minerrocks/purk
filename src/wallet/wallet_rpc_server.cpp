@@ -74,7 +74,7 @@ namespace tools
     return epee::http_server_impl_base<wallet_rpc_server, connection_context>::init(m_port, m_bind_ip);
   }
   //------------------------------------------------------------------------------------------------------------------------------
-  bool wallet_rpc_server::on_get_height(const wallet_rpc::COMMAND_RPC_GET_CURENT_HEIGHT::request& req, wallet_rpc::COMMAND_RPC_GET_CURENT_HEIGHT::response& res, epee::json_rpc::error& er, connection_context& cntx)
+  bool wallet_rpc_server::on_get_height(const wallet_rpc::COMMAND_RPC_GET_CURRENT_HEIGHT::request& req, wallet_rpc::COMMAND_RPC_GET_CURRENT_HEIGHT::response& res, epee::json_rpc::error& er, connection_context& cntx)
   {
     res.height = m_wallet.get_blockchain_current_height();
     res.status = CORE_RPC_STATUS_OK;

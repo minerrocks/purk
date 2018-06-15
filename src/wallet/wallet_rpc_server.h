@@ -43,7 +43,7 @@ namespace tools
 
     BEGIN_URI_MAP2()
       BEGIN_JSON_RPC_MAP("/json_rpc")
-        MAP_JON_RPC_WE("get_height",   on_get_height,   wallet_rpc::COMMAND_RPC_GET_CURENT_HEIGHT)
+        MAP_JON_RPC_WE("get_height",   on_get_height,   wallet_rpc::COMMAND_RPC_GET_CURRENT_HEIGHT)
         MAP_JON_RPC_WE("getbalance",   on_getbalance,   wallet_rpc::COMMAND_RPC_GET_BALANCE)
         MAP_JON_RPC_WE("getaddress",   on_getaddress,   wallet_rpc::COMMAND_RPC_GET_ADDRESS)
         MAP_JON_RPC_WE("transfer",     on_transfer,     wallet_rpc::COMMAND_RPC_TRANSFER)
@@ -61,7 +61,7 @@ namespace tools
     END_URI_MAP2()
 
       //json_rpc
-      bool on_get_height(const wallet_rpc::COMMAND_RPC_GET_CURENT_HEIGHT::request& req, wallet_rpc::COMMAND_RPC_GET_CURENT_HEIGHT::response& res, epee::json_rpc::error& er, connection_context& cntx);      
+      bool on_get_height(const wallet_rpc::COMMAND_RPC_GET_CURRENT_HEIGHT::request& req, wallet_rpc::COMMAND_RPC_GET_CURRENT_HEIGHT::response& res, epee::json_rpc::error& er, connection_context& cntx);      
       bool on_getbalance(const wallet_rpc::COMMAND_RPC_GET_BALANCE::request& req, wallet_rpc::COMMAND_RPC_GET_BALANCE::response& res, epee::json_rpc::error& er, connection_context& cntx);
       bool on_getaddress(const wallet_rpc::COMMAND_RPC_GET_ADDRESS::request& req, wallet_rpc::COMMAND_RPC_GET_ADDRESS::response& res, epee::json_rpc::error& er, connection_context& cntx);
       bool on_transfer(const wallet_rpc::COMMAND_RPC_TRANSFER::request& req, wallet_rpc::COMMAND_RPC_TRANSFER::response& res, epee::json_rpc::error& er, connection_context& cntx);

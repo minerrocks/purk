@@ -61,7 +61,7 @@ namespace wallet_rpc
     END_KV_SERIALIZE_MAP()
   };
 
-  struct COMMAND_RPC_GET_CURENT_HEIGHT
+  struct COMMAND_RPC_GET_CURRENT_HEIGHT
   {
     struct request
     {
