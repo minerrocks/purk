@@ -9,7 +9,7 @@ int main () {
     log_space::get_set_log_detalisation_level(true, LOG_LEVEL_1);
     log_space::log_singletone::add_logger(LOGGER_CONSOLE, NULL, NULL, LOG_LEVEL_1);
   
-    std::string daemon_address = "http://localhost:10102";
+    std::string daemon_address = "http://localhost:10120";
     epee::net_utils::http::http_simple_client http_client;
     currency::COMMAND_RPC_GETBLOCK::request req = AUTO_VAL_INIT(req);
     for (uint64_t i=778000; i<std::numeric_limits<uint64_t>::max(); ++i) {
