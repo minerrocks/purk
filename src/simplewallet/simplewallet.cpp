@@ -1334,7 +1334,7 @@ int currency::run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw
     if (!r)
         return 1;
 
-    //set up logging options
+    //all logging levels now on - including bind
     log_space::get_set_log_detalisation_level(true, LOG_LEVEL_2);
     log_space::log_singletone::add_logger(LOGGER_CONSOLE, NULL, NULL, LOG_LEVEL_0);
     log_space::log_singletone::add_logger(LOGGER_FILE,
