@@ -61,6 +61,25 @@ namespace wallet_rpc
     END_KV_SERIALIZE_MAP()
   };
 
+  struct COMMAND_RPC_GET_CURENT_HEIGHT
+  {
+    struct request
+    {
+      BEGIN_KV_SERIALIZE_MAP()
+      END_KV_SERIALIZE_MAP()
+    };
+
+        struct response
+    {
+      uint64_t 	 height;
+      std::string status;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(height)
+        KV_SERIALIZE(status)
+      END_KV_SERIALIZE_MAP()
+    };
+  };
 
   struct COMMAND_RPC_GET_BALANCE
   {
