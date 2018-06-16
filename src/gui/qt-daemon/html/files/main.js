@@ -267,9 +267,7 @@ function get_transfer_html_entry(tr, is_recent) {
   transfer_line_tamplate += "{5}";
   transfer_line_tamplate += "</div>";
 
-  var short_string = tr.recipient_alias.length
-    ? "@" + tr.recipient_alias
-    : tr.recipient.substr(0, 8) + "..." + tr.recipient.substr(tr.recipient.length - 8, 8);
+  var short_string = tr.destination_alias.length ?  "@" + tr.destination_alias : (tr.destinations.substr(0, 8) + "..." +  tr.destinations.substr(tr.destinations.length - 8, 8) );
   transfer_line_tamplate = transfer_line_tamplate.format(
     color_str,
     img_ref,
@@ -286,7 +284,7 @@ function get_transfer_html_entry(tr, is_recent) {
       tr.unlock_time ? tr.unlock_time - tr.height : 0
     ),
     action_text,
-    tr.recipient,
+    tr.destinations,
     short_string
   );
 
@@ -579,8 +577,8 @@ $(function() {
         rcv: [1000, 1000, 1000, 1000], //rcv: ["0.0000001000", "0.0000001000", "0.0000001000", "0.0000001000"],
         spn: [1000, 1000] //spn: ["0.0000001000", "0.0000001000"]
       },
-      recipient: "PK2LbDFDZ8FYcAPW82Ku5pdgN5uAPbKTSQHNTbpv6qfYaowRjEuEoBdKEJKA1jQE1QCDzKhmoNVh8D1k5DicgNAo1uVCocrsY",
-      recipient_alias: "ionictong"
+      destinations: "PK2LbDFDZ8FYcAPW82Ku5pdgN5uAPbKTSQHNTbpv6qfYaowRjEuEoBdKEJKA1jQE1QCDzKhmoNVh8D1k5DicgNAo1uVCocrsY",
+      destination_alias: "ionictong"
     },
     balance: 1000,
     unlocked_balance: 1000
@@ -598,18 +596,18 @@ $(function() {
   tttt.ti.fee = 1000000000;
   tttt.ti.payment_id = "";
   tttt.ti.amount = 10123000000000;
-  tttt.ti.recipient =
+  tttt.ti.destinations =
     "PK2LbDFDZ8FYcAPW82Ku5pdgN5uAPbKTSQHNTbpv6qfYaowRjEuEoBdKEJKA1jQE1QCDzKhmoNVh8D1k5DicgNAo1uVCocrsY";
-  tttt.ti.recipient_alias = "purkproject";
+  tttt.ti.destination_alias = "purkproject";
 
   on_money_transfer(tttt);
 
   tttt.ti.tx_hash = "u19670a07875c0239df165ec43958fdbf4fc258caf7456415eafabc281c21c2";
   tttt.ti.is_income = false;
   tttt.ti.payment_id = undefined;
-  tttt.ti.recipient =
+  tttt.ti.destinations =
     "PK2LbDFDZ8FYcAPW82Ku5pdgN5uAPbKTSQHNTbpv6qfYaowRjEuEoBdKEJKA1jQE1QCDzKhmoNVh8D1k5DicgNAo1uVCocrsY";
-  tttt.ti.recipient_alias = "purk";
+  tttt.ti.destination_alias = "purk";
 
   on_money_transfer(tttt);
 

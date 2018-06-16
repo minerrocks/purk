@@ -749,7 +749,7 @@ bool print_wti(const tools::wallet_rpc::wallet_transfer_info& wti)
     message_writer(cl) << epee::misc_utils::get_time_str_v2(wti.timestamp) << " "
                        << (wti.is_income ? "Received " : "Sent    ")
                        << print_money(wti.amount) << "(fee:" << print_money(wti.fee) << ")  "
-                       << (wti.recipient_alias.size() ? wti.recipient_alias : wti.recipient)
+                       << (wti.destination_alias.size() ? wti.destination_alias : wti.destinations)
                        << " " << wti.tx_hash << payment_id_placeholder;
     return true;
 }
@@ -1334,7 +1334,7 @@ int currency::run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw
     if (!r)
         return 1;
 
-    //all logging levels now on - including bind
+    //set up logging options
     log_space::get_set_log_detalisation_level(true, LOG_LEVEL_2);
     log_space::log_singletone::add_logger(LOGGER_CONSOLE, NULL, NULL, LOG_LEVEL_0);
     log_space::log_singletone::add_logger(LOGGER_FILE,
@@ -1482,3 +1482,5 @@ std::string currency::address()
 {
     return tools::address();
 }
+
+

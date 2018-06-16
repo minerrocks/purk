@@ -186,6 +186,7 @@ public:
     bool get_tx_key(const crypto::hash &txid, crypto::secret_key &tx_key) const;
     bool check_connection();
     void get_transfers(wallet2::transfer_container& incoming_transfers) const;
+    bool get_transfers(const wallet_rpc::COMMAND_RPC_GET_TRANSFERS::request& req, wallet_rpc::COMMAND_RPC_GET_TRANSFERS::response& res) const;
     void get_payments(const crypto::hash& payment_id, std::list<payment_details>& payments, uint64_t min_height = 0) const;
 
     void get_payments_by_id(const crypto::hash& payment_id, std::list<payment_details>& payments, uint64_t min_height = 0) const;
@@ -246,11 +247,11 @@ private:
     void process_unconfirmed(const currency::transaction& tx, std::string& recipient, std::string& recipient_alias);
     void add_sent_unconfirmed_tx(const currency::transaction& tx, uint64_t change_amount, std::string recipient);
     void update_current_tx_limit();
-    void prepare_wti(wallet_rpc::wallet_transfer_info& wti, uint64_t height, uint64_t timestamp, const currency::transaction& tx, uint64_t amount, const money_transfer2_details& td);
+    void prepare_wti(wallet_rpc::wallet_transfer_info& wti, uint64_t height, uint64_t timestamp, const currency::transaction& tx, uint64_t amount, const money_transfer2_details& td)const;
     void handle_money_received2(const currency::block& b, const currency::transaction& tx, uint64_t amount, const money_transfer2_details& td);
     void handle_money_spent2(const currency::block& b, const currency::transaction& in_tx, uint64_t amount, const money_transfer2_details& td, const std::string& recipient, const std::string& recipient_alias);
     std::string get_alias_for_address(const std::string& addr);
-    void wallet_transfer_info_from_unconfirmed_transfer_details(const unconfirmed_transfer_details& utd, wallet_rpc::wallet_transfer_info& wti);
+    void wallet_transfer_info_from_unconfirmed_transfer_details(const unconfirmed_transfer_details& utd, wallet_rpc::wallet_transfer_info& wti)const;
 
     currency::account_base m_account;
     std::string m_wallet_file;
@@ -267,7 +268,7 @@ private:
 
     std::atomic<bool> m_run;
     std::vector<wallet_rpc::wallet_transfer_info> m_transfer_history;
-    std::unordered_map<crypto::hash, currency::transaction> m_unconfirmed_in_transfers;
+    std::unordered_map<crypto::hash, wallet_rpc::wallet_transfer_info> m_unconfirmed_in_transfers;
     uint64_t m_unconfirmed_balance;
     std::shared_ptr<i_core_proxy> m_core_proxy;
     i_wallet2_callback* m_callback;
@@ -337,13 +338,13 @@ namespace boost
         a & x.height;
         a & x.tx_blob_size;
         a & x.payment_id;
-        a & x.recipient;
+        a & x.destinations; 
         a & x.is_income;
         a & x.td;
         a & x.tx;
         if (ver < 2)
             return;
-        a & x.recipient_alias;
+        a & x.destination_alias;
         if (ver < 3)
             return;
         a & x.fee;
