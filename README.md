@@ -149,5 +149,5 @@ Good luck!
 ## Donate
 
 * Donate: https://donate.purkproject.com
-* PURK: PK39caXJuVeQPKe4LVWnjA7PpTSyu4z7iTL4HStXThvvDgv6zFo2qZzNuC4YmzDdB7gkLwNJNi8UZdxrQP3XkCXH367py37VJ
+* PURK: @ionictong
 * BTC: 16irMH3VZEKxZ4h3ZZq2NhGUfNskG6u61o
