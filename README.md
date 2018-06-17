@@ -48,7 +48,7 @@ Anyone is able to contribute to Purk. If you have a bug fix or code change, feel
 
 ### Linux
 
-Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
+Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.53 (but don't use 1.54) or later. You may download them from:
 
 * http://gcc.gnu.org/
 * http://www.cmake.org/
@@ -79,9 +79,9 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
 ```
 mkdir tmp
 cd tmp
-wget -O boost_1_55_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.55.0/boost_1_55_0.tar.gz/download
-tar xzvf boost_1_55_0.tar.gz
-cd boost_1_55_0/
+wget -O boost_1_53_0.tar.gz https://sourceforge.net/projects/boost/files/boost/1.53.0/boost_1_53_0.tar.gz/download
+tar xzvf boost_1_53_0.tar.gz
+cd boost_1_53_0/
 ./bootstrap.sh --with-libraries=system,filesystem,serialization,program_options,date_time,thread,regex,atomic,iostreams,log,locale,wave --prefix=/usr/local
 sudo ./b2 install
 sudo sh -c 'echo "/usr/local/lib" >> /etc/ld.so.conf.d/local.conf'
@@ -101,7 +101,7 @@ make
 
 ###  MacOS X
 
-Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
+Dependencies: GCC 4.7.3 or later, CMake 2.8.6 or later, and Boost 1.53 (but don't use 1.54) or later. You may download them from:
 
 * http://gcc.gnu.org/
 * http://www.cmake.org/
@@ -130,7 +130,7 @@ Building with Clang: it may be possible to use Clang instead of GCC, but this ma
 
 ### Windows
 
-Dependencies: MSVC 2012 or later, CMake 2.8.6 or later, and Boost 1.55 or later. You may download them from:
+Dependencies: MSVC 2012 or later, CMake 2.8.6 or later, and Boost 1.53 (but don't use 1.54) or later. You may download them from:
 
 * http://www.microsoft.com/
 * http://www.cmake.org/
