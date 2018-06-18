@@ -1275,7 +1275,7 @@ bool simple_wallet::process_command(const std::vector<std::string> &args)
     return m_cmd_binder.process_command_vec(args);
 }
 //----------------------------------------------------------------------------------------------------
-int currency::run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw)
+int currency::run_wallet_rpc(int argc, char* argv[], bool log)
 {
 #ifdef WIN32
     _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -1308,7 +1308,6 @@ int currency::run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw
     po::options_description desc_all;
     desc_all.add(desc_general).add(desc_params);
     currency::simple_wallet w;
-    sw = &w;
     po::variables_map vm;
     bool r = command_line::handle_error_helper(desc_all, [&]()
     {
@@ -1336,7 +1335,9 @@ int currency::run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw
 
     //set up logging options
     log_space::get_set_log_detalisation_level(true, LOG_LEVEL_2);
-    log_space::log_singletone::add_logger(LOGGER_CONSOLE, NULL, NULL, LOG_LEVEL_0);
+    if (log) {
+        log_space::log_singletone::add_logger(LOGGER_CONSOLE, NULL, NULL, LOG_LEVEL_0);
+    }
     log_space::log_singletone::add_logger(LOGGER_FILE,
                                           log_space::log_singletone::get_default_log_file().c_str(),
                                           log_space::log_singletone::get_default_log_folder().c_str(), LOG_LEVEL_4);
