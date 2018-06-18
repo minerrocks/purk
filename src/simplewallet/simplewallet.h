@@ -157,7 +157,7 @@ private:
     refresh_progress_reporter_t m_refresh_progress_reporter;
 };
 
-int run_wallet_rpc(int argc, char* argv[], currency::simple_wallet* sw=nullptr);
+int run_wallet_rpc(int argc, char* argv[], bool log=false);
 bool stop_rpc();
 bool show_ping();
 void set_accepted(bool);
