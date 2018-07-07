@@ -1,7 +1,7 @@
 {
     "method": "maketelepod",
     "params":{
- 	   "amount": 1000000000000
+ 	   "amount": 1000000
          },
     "id": 1234
 }
