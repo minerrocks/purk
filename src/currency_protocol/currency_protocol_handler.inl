@@ -123,16 +123,16 @@ namespace currency
       && m_core.get_blockchain_storage().get_checkpoints().get_top_checkpoint_height() < hshd.last_checkpoint_height 
       && m_core.get_current_blockchain_height() < hshd.last_checkpoint_height )
     {
-      LOG_PRINT_CCONTEXT_RED("Remote node have longer checkpoints zone( " << hshd.last_checkpoint_height <<  ") " << 
+      LOG_PRINT_CCONTEXT_RED("Remote node has longer checkpoints zone( " << hshd.last_checkpoint_height <<  ") " << 
         "that local (" << m_core.get_blockchain_storage().get_checkpoints().get_top_checkpoint_height() << ")" <<
-        "That means that current software is outdated, please updated it." << 
-        "Current heigh lay under checkpoints on remote host, so it is not possible validate this transactions on local host, disconnecting.", LOG_LEVEL_0);
+        "That means that the current software is outdated, please update it." << 
+        "Current height is under checkpoints on remote host, so it is not possible to validate this transaction on local host, disconnecting.", LOG_LEVEL_0);
       return false;
     }else if (m_core.get_blockchain_storage().get_checkpoints().get_top_checkpoint_height() < hshd.last_checkpoint_height)
     {
-      LOG_PRINT_CCONTEXT_MAGENTA("Remote node have longer checkpoints zone( " << hshd.last_checkpoint_height <<  ") " <<
+      LOG_PRINT_CCONTEXT_MAGENTA("Remote node has longer checkpoints zone( " << hshd.last_checkpoint_height <<  ") " <<
         "that local (" << m_core.get_blockchain_storage().get_checkpoints().get_top_checkpoint_height() << ")" << 
-        "That means that current software is outdated, please updated it.", LOG_LEVEL_0);
+        "That means that the current software is outdated, please update it.", LOG_LEVEL_0);
     }
 
     context.m_state = currency_connection_context::state_synchronizing;
@@ -337,7 +337,7 @@ namespace currency
 
     if(context.m_requested_objects.size())
     {
-      LOG_PRINT_CCONTEXT_RED("returned not all requested objects (context.m_requested_objects.size()=" 
+      LOG_PRINT_CCONTEXT_RED("didn't return all requested objects (context.m_requested_objects.size()=" 
         << context.m_requested_objects.size() << "), dropping connection", LOG_LEVEL_0);
       m_p2p->drop_connection(context);
       return 1;
