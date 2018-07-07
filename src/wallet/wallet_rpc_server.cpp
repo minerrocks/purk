@@ -445,7 +445,7 @@ bool wallet_rpc_server::on_get_transfers(const wallet_rpc::COMMAND_RPC_GET_TRANS
     }
     if (CURRENCY_MAX_TRANSACTION_BLOB_SIZE <= get_object_blobsize(tx2))
     {
-      LOG_ERROR("Problem with construct_tx(....), blobl size os too big: " << get_object_blobsize(tx2));
+      LOG_ERROR("Problem with construct_tx(....), blob size is too big: " << get_object_blobsize(tx2));
       status = "INTERNAL_ERROR";
       return false;
     }
@@ -593,7 +593,3 @@ bool wallet_rpc_server::on_get_transfers(const wallet_rpc::COMMAND_RPC_GET_TRANS
     return m_address;
   }
 }
-
-
-
-
