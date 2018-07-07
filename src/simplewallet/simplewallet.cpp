@@ -184,7 +184,7 @@ simple_wallet::simple_wallet()
     m_cmd_binder.set_handler("transfer", boost::bind(&simple_wallet::transfer, this, _1), "transfer <mixin_count> <addr_1> <amount_1> [<addr_2> <amount_2> ... <addr_N> <amount_N>] [payment_id] - Transfer <amount_1>,... <amount_N> to <address_1>,... <address_N>, respectively. <mixin_count> is the number of transactions yours is indistinguishable from (from 0 to maximum available)");
     m_cmd_binder.set_handler("get_tx_key", boost::bind(&simple_wallet::get_tx_key, this, _1), "Get transaction key (r) for a given <txid>");
     m_cmd_binder.set_handler("check_tx_key", boost::bind(&simple_wallet::check_tx_key, this, _1), "Check amount going to <address> in <txid>");
-    m_cmd_binder.set_handler("set_log", boost::bind(&simple_wallet::set_log, this, _1), "set_log <level> - Change current log detalization level, <level> is a number 0-4");
+    m_cmd_binder.set_handler("set_log", boost::bind(&simple_wallet::set_log, this, _1), "set_log <level> - Change current log level, <level> is a number 0-4");
     m_cmd_binder.set_handler("address", boost::bind(&simple_wallet::print_address, this, _1), "Show current wallet public address");
     m_cmd_binder.set_handler("save", boost::bind(&simple_wallet::save, this, _1), "Save wallet synchronized data");
     m_cmd_binder.set_handler("help", boost::bind(&simple_wallet::help, this, _1), "Show this help");
@@ -295,13 +295,13 @@ bool simple_wallet::consolidateinputs(const std::vector<string> &args) {
     }
 
     if (temp_selected_transfers.size() == 0) {
-        message_writer(epee::log_space::console_color_yellow, true) << "There are no blocks available for consolidation...";
+        message_writer(epee::log_space::console_color_yellow, true) << "There aren't any blocks available for consolidation...";
         return true;
     }
 
     if (temp_selected_transfers.size() > 0) {
         message_writer(epee::log_space::console_color_red, true) << "Attention: only 50 blocks can be consolidated at once!!!";
-        message_writer(epee::log_space::console_color_cyan, true) << "You will be able to consolidate again when current consolidation process is complete...";
+        message_writer(epee::log_space::console_color_cyan, true) << "You will be able to consolidate again when the current consolidation process is complete...";
     }
 
     std::string user_input;
@@ -407,7 +407,7 @@ bool simple_wallet::init(const boost::program_options::variables_map& vm)
     {
         if (m_restore_seed.empty())
         {
-            fail_msg_writer() << "you must specify 24-word restore seed to restore wallet";
+            fail_msg_writer() << "you must specify the 24-word restore seed to restore wallet";
             return false;
         }
         bool r = restore_wallet(m_restore_wallet, m_restore_seed, pwd_container.password());
@@ -446,8 +446,8 @@ bool simple_wallet::try_connect_to_daemon()
     if (!m_wallet->check_connection())
     {
         fail_msg_writer() << "wallet failed to connect to daemon (" << m_daemon_address << "). " <<
-                             "Daemon either is not started or passed wrong port. " <<
-                             "Please, make sure that daemon is running or restart the wallet with correct daemon address.";
+                             "Daemon either has not started or passed wrong port. " <<
+                             "Please make sure that daemon is running or restart the wallet with the correct daemon address.";
         return false;
     }
     return true;
@@ -624,7 +624,7 @@ bool simple_wallet::start_mining(const std::vector<std::string>& args)
     if (err.empty())
         success_msg_writer() << "Mining started in daemon";
     else
-        fail_msg_writer() << "mining has NOT been started: " << err;
+        fail_msg_writer() << "Mining has NOT been started: " << err;
     return true;
 }
 //----------------------------------------------------------------------------------------------------
@@ -640,7 +640,7 @@ bool simple_wallet::stop_mining(const std::vector<std::string>& args)
     if (err.empty())
         success_msg_writer() << "Mining stopped in daemon";
     else
-        fail_msg_writer() << "mining has NOT been stopped: " << err;
+        fail_msg_writer() << "Mining has NOT been stopped: " << err;
     return true;
 }
 //----------------------------------------------------------------------------------------------------
@@ -928,7 +928,7 @@ bool simple_wallet::transfer(const std::vector<std::string> &args_)
     size_t fake_outs_count;
     if(!string_tools::get_xtype_from_string(fake_outs_count, local_args[0]))
     {
-        fail_msg_writer() << "mixin_count should be non-negative integer, got " << local_args[0];
+        fail_msg_writer() << "mixin_count should be a non-negative integer, got " << local_args[0];
         return true;
     }
     local_args.erase(local_args.begin());
@@ -1483,5 +1483,3 @@ std::string currency::address()
 {
     return tools::address();
 }
-
-
