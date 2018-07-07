@@ -183,7 +183,7 @@ void blockchain_storage::set_checkpoints(checkpoints&& chk_pts)
 bool blockchain_storage::prune_ring_signatures(uint64_t height, uint64_t& transactions_pruned, uint64_t& signatures_pruned)
 {
   CRITICAL_REGION_LOCAL(m_blockchain_lock);
-  CHECK_AND_ASSERT_MES(height < m_blocks.size(), false, "prune_ring_signatures called with wrong parametr " << height << ", m_blocks.size() " << m_blocks.size());
+  CHECK_AND_ASSERT_MES(height < m_blocks.size(), false, "prune_ring_signatures called with wrong parameter " << height << ", m_blocks.size() " << m_blocks.size());
   for(const auto& h: m_blocks[height].bl.tx_hashes)
   {
     auto it = m_transactions.find(h);
@@ -209,7 +209,7 @@ bool blockchain_storage::prune_ring_signatures_if_need()
     for(uint64_t height = m_current_pruned_rs_height; height < m_blocks.size() && height <= m_checkpoints.get_top_checkpoint_height(); height++)
     {
       bool res = prune_ring_signatures(height, tx_count, sig_count);
-      CHECK_AND_ASSERT_MES(res, false, "filed to prune_ring_signatures for height = " << height);
+      CHECK_AND_ASSERT_MES(res, false, "failed to prune_ring_signatures for height = " << height);
     }
     m_current_pruned_rs_height = m_checkpoints.get_top_checkpoint_height();
     LOG_PRINT_CYAN("Transaction pruning finished: " << sig_count << " signatures released in " << tx_count << " transactions.", LOG_LEVEL_0);
@@ -745,7 +745,7 @@ bool blockchain_storage::validate_miner_transaction(const block& b, size_t cumul
   }
   if(base_reward + fee < money_in_use)
   {
-    LOG_ERROR("coinbase transaction spend too much money (" << print_money(money_in_use) << "). Block reward is " << print_money(base_reward + fee) << "(" << print_money(base_reward) << "+" << print_money(fee) << ")");
+    LOG_ERROR("coinbase transaction spent too much money (" << print_money(money_in_use) << "). Block reward is " << print_money(base_reward + fee) << "(" << print_money(base_reward) << "+" << print_money(fee) << ")");
     return false;
   }
   if(base_reward + fee != money_in_use)
@@ -803,7 +803,7 @@ bool blockchain_storage::create_block_template(block& b, const account_public_ad
   diffic = get_difficulty_for_next_block();
   if(!(height%CURRENCY_DONATIONS_INTERVAL))
     get_required_donations_value_for_next_block(donation_amount_for_this_block);
-  CHECK_AND_ASSERT_MES(diffic, false, "difficulty owverhead.");
+  CHECK_AND_ASSERT_MES(diffic, false, "difficulty overhead.");
 
   median_size = m_current_block_cumul_sz_limit / 2;
   already_generated_coins = m_blocks.back().already_generated_coins;
@@ -829,7 +829,7 @@ bool blockchain_storage::create_block_template(block& b, const account_public_ad
                                                    m_royalty_account.m_account_address, 
                                                    b.miner_tx, ex_nonce, 
                                                    11, donation_amount_for_this_block, ai);
-  CHECK_AND_ASSERT_MES(r, false, "Failed to construc miner tx, first chance");
+  CHECK_AND_ASSERT_MES(r, false, "Failed to construct miner tx, first chance");
 #ifdef _DEBUG
   std::list<size_t> try_val;
   try_val.push_back(get_object_blobsize(b.miner_tx));
@@ -850,7 +850,7 @@ bool blockchain_storage::create_block_template(block& b, const account_public_ad
     try_val.push_back(get_object_blobsize(b.miner_tx));
 #endif
 
-    CHECK_AND_ASSERT_MES(r, false, "Failed to construc miner tx, second chance");
+    CHECK_AND_ASSERT_MES(r, false, "Failed to construct miner tx, second chance");
     size_t coinbase_blob_size = get_object_blobsize(b.miner_tx);
     if (coinbase_blob_size > cumulative_size - txs_size) {
       cumulative_size = txs_size + coinbase_blob_size;
@@ -866,7 +866,7 @@ bool blockchain_storage::create_block_template(block& b, const account_public_ad
         b.miner_tx.extra.resize(b.miner_tx.extra.size() - 1);
         if (cumulative_size != txs_size + get_object_blobsize(b.miner_tx)) {
           //fuck, not lucky, -1 makes varint-counter size smaller, in that case we continue to grow with cumulative_size
-          LOG_PRINT_RED("Miner tx creation have no luck with delta_extra size = " << delta << " and " << delta - 1 , LOG_LEVEL_2);
+          LOG_PRINT_RED("Miner tx creation has no luck with delta_extra size = " << delta << " and " << delta - 1 , LOG_LEVEL_2);
           cumulative_size += delta - 1;
           continue;
         }
@@ -969,7 +969,7 @@ bool blockchain_storage::handle_alternative_block(const block& b, const crypto::
       CHECK_AND_ASSERT_MES(m_blocks.size() > alt_chain.front()->second.height, false, "main blockchain wrong height");
       crypto::hash h = null_hash;
       get_block_hash(m_blocks[alt_chain.front()->second.height - 1].bl, h);
-      CHECK_AND_ASSERT_MES(h == alt_chain.front()->second.bl.prev_id, false, "alternative chain have wrong connection to main chain");
+      CHECK_AND_ASSERT_MES(h == alt_chain.front()->second.bl.prev_id, false, "alternative chain has wrong connection to main chain");
       complete_timestamps_vector(alt_chain.front()->second.height - 1, timestamps);
       //build alternative scratchpad
       for(auto& ach: alt_chain)
@@ -977,7 +977,7 @@ bool blockchain_storage::handle_alternative_block(const block& b, const crypto::
         if(!push_block_scratchpad_data(ach->second.scratch_offset, ach->second.bl, alt_scratchppad, alt_scratchppad_patch))
         {
           LOG_PRINT_RED_L0("Block with id: " << id
-            << ENDL << " for alternative chain, have invalid data");
+            << ENDL << " for alternative chain, has invalid data");
           bvc.m_verifivation_failed = true;
           return false;
         }
@@ -991,7 +991,7 @@ bool blockchain_storage::handle_alternative_block(const block& b, const crypto::
     if(!check_block_timestamp(timestamps, b))
     {
       LOG_PRINT_RED_L0("Block with id: " << id
-        << ENDL << " for alternative chain, have invalid timestamp: " << b.timestamp);
+        << ENDL << " for alternative chain, has invalid timestamp: " << b.timestamp);
       //add_block_as_invalid(b, id);//do not add blocks to invalid storage before proof of work check was passed
       bvc.m_verifivation_failed = true;
       return false;
@@ -1061,7 +1061,7 @@ bool blockchain_storage::handle_alternative_block(const block& b, const crypto::
     if(!check_hash(proof_of_work, current_diff))
     {
       LOG_PRINT_RED_L0("Block with id: " << id
-        << ENDL << " for alternative chain, have not enough proof of work: " << proof_of_work
+        << ENDL << " for alternative chain, doesn't have enough proof of work: " << proof_of_work
         << ENDL << " expected difficulty: " << current_diff);
       bvc.m_verifivation_failed = true;
       return false;
@@ -1085,7 +1085,7 @@ bool blockchain_storage::handle_alternative_block(const block& b, const crypto::
     if(!prevalidate_miner_transaction(b, bei.height))
     {
       LOG_PRINT_RED_L0("Block with id: " << string_tools::pod_to_hex(id)
-        << " (as alternative) have wrong miner transaction.");
+        << " (as alternative) has wrong miner transaction.");
       bvc.m_verifivation_failed = true;
       return false;
 
@@ -1138,7 +1138,7 @@ bool blockchain_storage::get_blocks(uint64_t start_offset, size_t count, std::li
     blocks.push_back(m_blocks[i].bl);
     std::list<crypto::hash> missed_ids;
     get_transactions(m_blocks[i].bl.tx_hashes, txs, missed_ids);
-    CHECK_AND_ASSERT_MES(!missed_ids.size(), false, "have missed transactions in own block in main blockchain");
+    CHECK_AND_ASSERT_MES(!missed_ids.size(), false, "has missed transactions in own block and in main blockchain");
   }
 
   return true;
@@ -1390,7 +1390,7 @@ bool blockchain_storage::update_spent_tx_flags_for_input(uint64_t amount, uint64
 {
   CRITICAL_REGION_LOCAL(m_blockchain_lock);
   auto it = m_outputs.find(amount);
-  CHECK_AND_ASSERT_MES(it != m_outputs.end(), false, "Amount " << amount << " have not found during update_spent_tx_flags_for_input()");
+  CHECK_AND_ASSERT_MES(it != m_outputs.end(), false, "Amount " << amount << " has not been found during update_spent_tx_flags_for_input()");
   CHECK_AND_ASSERT_MES(global_index < it->second.size(), false, "Global index" << global_index << " for amount " << amount << " bigger value than amount's vector size()=" << it->second.size());
 
 
@@ -1776,7 +1776,7 @@ bool blockchain_storage::put_alias_info(const alias_info& ai)
   }else
   {
     //update procedure
-    CHECK_AND_ASSERT_MES(alias_history.size(), false, "alias " << ai.m_alias << " can't be update becouse it doesn't exists");
+    CHECK_AND_ASSERT_MES(alias_history.size(), false, "alias " << ai.m_alias << " can't be update because it doesn't exist");
     std::string signed_buff;
     make_tx_extra_alias_entry(signed_buff, ai, true);
     bool r = crypto::check_signature(get_blob_hash(signed_buff), alias_history.back().m_address.m_spend_public_key, ai.m_sign);
@@ -1834,7 +1834,7 @@ bool blockchain_storage::add_transaction_from_block(const transaction& tx, const
       if(!r.second)
       {
         //double spend detected
-        LOG_PRINT_L0("tx with id: " << m_tx_id << " in block id: " << m_bl_id << " have input marked as spent with key image: " << ki << ", block declined");
+        LOG_PRINT_L0("tx with id: " << m_tx_id << " in block id: " << m_bl_id << " has input marked as spent with key image: " << ki << ", block declined");
         return false;
       }
 
@@ -1955,7 +1955,7 @@ bool blockchain_storage::check_tx_inputs(const transaction& tx, const crypto::ha
     const std::vector<crypto::signature>* psig = &sig_stub;
     if (!m_is_in_checkpoint_zone)
     {
-      CHECK_AND_ASSERT_MES(sig_index < tx.signatures.size(), false, "wrong transaction: not signature entry for input with index= " << sig_index);
+      CHECK_AND_ASSERT_MES(sig_index < tx.signatures.size(), false, "wrong transaction: no signature entry for input with index= " << sig_index);
       psig = &tx.signatures[sig_index];
     }    
     if (!check_tx_input(in_to_key, tx_prefix_hash, *psig, pmax_used_block_height))
@@ -2010,13 +2010,13 @@ bool blockchain_storage::check_tx_input(const txin_to_key& txin, const crypto::h
       //check tx unlock time
       if(!m_bch.is_tx_spendtime_unlocked(tx.unlock_time))
       {
-        LOG_PRINT_L0("One of outputs for one of inputs have wrong tx.unlock_time = " << tx.unlock_time);
+        LOG_PRINT_L0("One of outputs for one of inputs has wrong tx.unlock_time = " << tx.unlock_time);
         return false;
       }
 
       if(out.target.type() != typeid(txout_to_key))
       {
-        LOG_PRINT_L0("Output have wrong type id, which=" << out.target.which());
+        LOG_PRINT_L0("Output has wrong type id, which=" << out.target.which());
         return false;
       }
 
@@ -2139,7 +2139,7 @@ bool blockchain_storage::handle_block_to_main_chain(const block& bl, const crypt
   if(bl.prev_id != get_top_block_id())
   {
     LOG_PRINT_L0("Block with id: " << id << ENDL
-      << "have wrong prev_id: " << bl.prev_id << ENDL
+      << "has wrong prev_id: " << bl.prev_id << ENDL
       << "expected: " << get_top_block_id());
     return false;
   }
@@ -2147,7 +2147,7 @@ bool blockchain_storage::handle_block_to_main_chain(const block& bl, const crypt
   if(!check_block_timestamp_main(bl))
   {
     LOG_PRINT_L0("Block with id: " << id << ENDL
-      << "have invalid timestamp: " << bl.timestamp);
+      << "has invalid timestamp: " << bl.timestamp);
     //add_block_as_invalid(bl, id);//do not add blocks to invalid storage befor proof of work check was passed
     bvc.m_verifivation_failed = true;
     return false;
@@ -2169,7 +2169,7 @@ bool blockchain_storage::handle_block_to_main_chain(const block& bl, const crypt
   if(!check_hash(proof_of_work, current_diffic))
   {
     LOG_PRINT_L0("Block with id: " << id << ENDL
-      << "have not enough proof of work: " << proof_of_work << ENDL
+      << "has not enough proof of work: " << proof_of_work << ENDL
       << "nexpected difficulty: " << current_diffic );
     bvc.m_verifivation_failed = true;
     return false;
@@ -2214,7 +2214,7 @@ bool blockchain_storage::handle_block_to_main_chain(const block& bl, const crypt
     uint64_t fee = 0;
     if(!m_tx_pool.take_tx(tx_id, tx, blob_size, fee))
     {
-      LOG_PRINT_L0("Block with id: " << id  << "have at least one unknown transaction with id: " << tx_id);
+      LOG_PRINT_L0("Block with id: " << id  << "has at least one unknown transaction with id: " << tx_id);
       purge_block_data_from_blockchain(bl, tx_processed_count);
       //add_block_as_invalid(bl, id);
       bvc.m_verifivation_failed = true;
@@ -2229,13 +2229,13 @@ bool blockchain_storage::handle_block_to_main_chain(const block& bl, const crypt
 
     if(!check_tx_inputs(tx))
     {
-      LOG_PRINT_L0("Block with id: " << id  << "have at least one transaction (id: " << tx_id << ") with wrong inputs.");
+      LOG_PRINT_L0("Block with id: " << id  << "has at least one transaction (id: " << tx_id << ") with wrong inputs.");
       currency::tx_verification_context tvc = AUTO_VAL_INIT(tvc);
       bool add_res = m_tx_pool.add_tx(tx, tvc, true);
       CHECK_AND_ASSERT_MES2(add_res, "handle_block_to_main_chain: failed to add transaction back to transaction pool");
       purge_block_data_from_blockchain(bl, tx_processed_count);
       add_block_as_invalid(bl, id);
-      LOG_PRINT_L0("Block with id " << id << " added as invalid becouse of wrong inputs in transactions");
+      LOG_PRINT_L0("Block with id " << id << " added as invalid because of wrong inputs in transactions");
       bvc.m_verifivation_failed = true;
       return false;
     }

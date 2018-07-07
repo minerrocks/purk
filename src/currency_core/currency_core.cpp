@@ -233,7 +233,7 @@ namespace currency
 
     if(!check_money_overflow(tx))
     {
-      LOG_PRINT_RED_L0("tx have money overflow, rejected for tx id= " << get_transaction_hash(tx));
+      LOG_PRINT_RED_L0("tx has money overflow, rejected for tx id= " << get_transaction_hash(tx));
       return false;
     }
 
@@ -249,20 +249,20 @@ namespace currency
 
     if(!keeped_by_block && get_object_blobsize(tx) >= m_blockchain_storage.get_current_comulative_blocksize_limit() - CURRENCY_COINBASE_BLOB_RESERVED_SIZE)
     {
-      LOG_PRINT_RED_L0("tx have to big size " << get_object_blobsize(tx) << ", expected not bigger than " << m_blockchain_storage.get_current_comulative_blocksize_limit() - CURRENCY_COINBASE_BLOB_RESERVED_SIZE);
+      LOG_PRINT_RED_L0("tx size is too big " << get_object_blobsize(tx) << ", expected not bigger than " << m_blockchain_storage.get_current_comulative_blocksize_limit() - CURRENCY_COINBASE_BLOB_RESERVED_SIZE);
       return false;
     }
 
     //check if tx use different key images
     if(!check_tx_inputs_keyimages_diff(tx))
     {
-      LOG_PRINT_RED_L0("tx have the similar keyimages");
+      LOG_PRINT_RED_L0("tx has the similar keyimages");
       return false;
     }
     
     if(!check_tx_extra(tx))
     {
-      LOG_PRINT_RED_L0("Tx have wrong extra, rejected");
+      LOG_PRINT_RED_L0("tx has wrong extra, rejected");
       return false;
     }
 
@@ -398,7 +398,7 @@ namespace currency
       m_blockchain_storage.get_transactions(b.tx_hashes, txs, missed_txs);
       if(missed_txs.size() &&  m_blockchain_storage.get_block_id_by_height(get_block_height(b)) != get_block_hash(b))
       {
-        LOG_PRINT_L0("Block found but, seems that reorganize just happened after that, do not relay this block");
+        LOG_PRINT_L0("Block found but it seemed to reorganize right after that, do not relay this block");
         return true;
       }
       CHECK_AND_ASSERT_MES(txs.size() == b.tx_hashes.size() && !missed_txs.size(), false, "cant find some transactions in found block:" << get_block_hash(b) << " txs.size()=" << txs.size()
@@ -433,7 +433,7 @@ namespace currency
     bvc = boost::value_initialized<block_verification_context>();
     if(block_blob.size() > get_max_block_size())
     {
-      LOG_PRINT_L0("WRONG BLOCK BLOB, too big size " << block_blob.size() << ", rejected");
+      LOG_PRINT_L0("WRONG BLOCK BLOB, too big in size " << block_blob.size() << ", rejected");
       bvc.m_verifivation_failed = true;
       return false;
     }

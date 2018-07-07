@@ -56,7 +56,7 @@ namespace currency
 
     if(outputs_amount >= inputs_amount)
     {
-      LOG_PRINT_L0("transaction use more money then it has: use " << outputs_amount << ", have " << inputs_amount);
+      LOG_PRINT_L0("transaction uses more money then it has: use " << outputs_amount << ", have " << inputs_amount);
       tvc.m_verifivation_failed = true;
       return false;
     }
@@ -110,7 +110,7 @@ namespace currency
     {
       //update transactions container
       auto txd_p = m_transactions.insert(transactions_container::value_type(id, tx_details()));
-      CHECK_AND_ASSERT_MES(txd_p.second, false, "intrnal error: transaction already exists at inserting in memorypool");
+      CHECK_AND_ASSERT_MES(txd_p.second, false, "internal error: transaction already exists at inserting in memory pool");
       txd_p.first->second.blob_size = blob_size;
       txd_p.first->second.tx = tx;
       txd_p.first->second.kept_by_block = kept_by_block;
