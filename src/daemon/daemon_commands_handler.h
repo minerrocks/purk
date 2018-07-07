@@ -117,7 +117,7 @@ private:
   {
 	if(!m_srv.get_payload_object().get_core().get_miner().is_mining()) 
 	{
-	  std::cout << "Mining is not started. You need start mining before you can see hash rate." << ENDL;
+	  std::cout << "Mining has not started. You need to start mining before you can see your hash rate." << ENDL;
 	} else 
 	{
 	  m_srv.get_payload_object().get_core().get_miner().do_print_hashrate(true);
@@ -307,7 +307,7 @@ private:
   {
     if(!args.size())
     {
-      std::cout << "Please, specify wallet address to mine for: start_mining <addr> [threads=1]" << std::endl;
+      std::cout << "Please specify wallet address to mine for: start_mining <addr> [threads=1]" << std::endl;
       return true;
     }
 
@@ -332,7 +332,7 @@ private:
   {
     if(args.size() != 2)
     {
-      std::cout << "Please, specify alias and wallet address to associate with" << std::endl;
+      std::cout << "Please specify alias and wallet address to associate with" << std::endl;
       return true;
     }
 
