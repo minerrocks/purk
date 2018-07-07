@@ -311,8 +311,8 @@ bool sign_update_alias(alias_info& ai, const crypto::public_key& pkey, const cry
 bool make_tx_extra_alias_entry(std::string& buff, const alias_info& alinfo, bool make_buff_to_sign)
 {
     CHECK_AND_ASSERT_MES(alinfo.m_alias.size(), false, "alias cant be empty");
-    CHECK_AND_ASSERT_MES(alinfo.m_alias.size() <= std::numeric_limits<uint8_t>::max(), false, "alias is too big size");
-    CHECK_AND_ASSERT_MES(alinfo.m_text_comment.size() <= std::numeric_limits<uint8_t>::max(), false, "alias comment is too big size");
+    CHECK_AND_ASSERT_MES(alinfo.m_alias.size() <= std::numeric_limits<uint8_t>::max(), false, "alias is too big");
+    CHECK_AND_ASSERT_MES(alinfo.m_text_comment.size() <= std::numeric_limits<uint8_t>::max(), false, "alias comment is too big");
     buff.resize(3);
     buff[0] = TX_EXTRA_TAG_ALIAS;
     buff[1] = 0;
@@ -356,12 +356,12 @@ bool parse_tx_extra_alias_entry(const transaction& tx, size_t start, alias_info&
     |--flags--|c---alias name----|--------- account public address --------|[----account tracking key----]|[c--- text comment ---][----- signature(poof of alias owning) ------]
 
     ************************************************************************************************************************************************************/
-    CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= sizeof(crypto::public_key)*2+1, false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS have not enough bytes) in tx " << get_transaction_hash(tx));
+    CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= sizeof(crypto::public_key)*2+1, false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS does not have enough bytes) in tx " << get_transaction_hash(tx));
     ++i;
     uint8_t alias_flags = tx.extra[i];
     ++i;
     uint8_t alias_name_len = tx.extra[i];
-    CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= tx.extra[i]+sizeof(crypto::public_key)*2, false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS have wrong name bytes counter) in tx " << get_transaction_hash(tx));
+    CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= tx.extra[i]+sizeof(crypto::public_key)*2, false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS has wrong bytes counter name) in tx " << get_transaction_hash(tx));
     
     alinfo.m_alias.assign((const char*)&tx.extra[i+1], static_cast<size_t>(alias_name_len));
     i += tx.extra[i] + 1;
@@ -371,20 +371,20 @@ bool parse_tx_extra_alias_entry(const transaction& tx, size_t start, alias_info&
     i += sizeof(const crypto::public_key);
     if(alias_flags&TX_EXTRA_TAG_ALIAS_FLAGS_ADDR_WITH_TRACK)
     {//address aliased with tracking key
-        CHECK_AND_ASSERT_MES(tx.extra.size()-i >= sizeof(crypto::secret_key), false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS have not enough bytes) in tx " << get_transaction_hash(tx));
+        CHECK_AND_ASSERT_MES(tx.extra.size()-i >= sizeof(crypto::secret_key), false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS does not have enough bytes) in tx " << get_transaction_hash(tx));
         alinfo.m_view_key = *reinterpret_cast<const crypto::secret_key*>(&tx.extra[i]);
         i += sizeof(const crypto::secret_key);
     }
     uint8_t comment_len = tx.extra[i];
     if(comment_len)
     {
-        CHECK_AND_ASSERT_MES(tx.extra.size() - i >=tx.extra[i], false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS have not enough bytes) in tx " << get_transaction_hash(tx));
+        CHECK_AND_ASSERT_MES(tx.extra.size() - i >=tx.extra[i], false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS does not have enough bytes) in tx " << get_transaction_hash(tx));
         alinfo.m_text_comment.assign((const char*)&tx.extra[i+1], static_cast<size_t>(tx.extra[i]));
         i += tx.extra[i] + 1;
     }
     if(alias_flags&TX_EXTRA_TAG_ALIAS_FLAGS_OP_UPDATE)
     {
-        CHECK_AND_ASSERT_MES(tx.extra.size()-i >= sizeof(crypto::secret_key), false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS have not enough bytes) in tx " << get_transaction_hash(tx));
+        CHECK_AND_ASSERT_MES(tx.extra.size()-i >= sizeof(crypto::secret_key), false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS does not have bytes) in tx " << get_transaction_hash(tx));
         alinfo.m_sign = *reinterpret_cast<const crypto::signature*>(&tx.extra[i]);
         i += sizeof(const crypto::signature);
     }
@@ -403,11 +403,11 @@ bool parse_and_validate_tx_extra(const transaction& tx, tx_extra_info& extra)
     {
         if(padding_started)
         {
-            CHECK_AND_ASSERT_MES(!tx.extra[i], false, "Failed to parse transaction extra (not 0 after padding) in tx " << get_transaction_hash(tx));
+            CHECK_AND_ASSERT_MES(!tx.extra[i], false, "Failed to parse transaction extra (no 0 after padding) in tx " << get_transaction_hash(tx));
         }
         else if(tx.extra[i] == TX_EXTRA_TAG_PUBKEY)
         {
-            CHECK_AND_ASSERT_MES(sizeof(crypto::public_key) <= tx.extra.size()-1-i, false, "Failed to parse transaction extra (TX_EXTRA_TAG_PUBKEY have not enough bytes) in tx " << get_transaction_hash(tx));
+            CHECK_AND_ASSERT_MES(sizeof(crypto::public_key) <= tx.extra.size()-1-i, false, "Failed to parse transaction extra (TX_EXTRA_TAG_PUBKEY does not have enough bytes) in tx " << get_transaction_hash(tx));
             CHECK_AND_ASSERT_MES(!tx_extra_tag_pubkey_found, false, "Failed to parse transaction extra (duplicate TX_EXTRA_TAG_PUBKEY entry) in tx " << get_transaction_hash(tx));
             extra.m_tx_pub_key = *reinterpret_cast<const crypto::public_key*>(&tx.extra[i+1]);
             i += 1 + sizeof(crypto::public_key);
@@ -417,16 +417,16 @@ bool parse_and_validate_tx_extra(const transaction& tx, tx_extra_info& extra)
         {
             //CHECK_AND_ASSERT_MES(is_coinbase(tx), false, "Failed to parse transaction extra (TX_EXTRA_NONCE can be only in coinbase) in tx " << get_transaction_hash(tx));
             CHECK_AND_ASSERT_MES(!tx_extra_user_data_found, false, "Failed to parse transaction extra (duplicate TX_EXTRA_NONCE entry) in tx " << get_transaction_hash(tx));
-            CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= 1, false, "Failed to parse transaction extra (TX_EXTRA_NONCE have not enough bytes) in tx " << get_transaction_hash(tx));
+            CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= 1, false, "Failed to parse transaction extra (TX_EXTRA_NONCE does not have enough bytes) in tx " << get_transaction_hash(tx));
             ++i;
-            CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= tx.extra[i], false, "Failed to parse transaction extra (TX_EXTRA_NONCE have wrong bytes counter) in tx " << get_transaction_hash(tx));
+            CHECK_AND_ASSERT_MES(tx.extra.size()-1-i >= tx.extra[i], false, "Failed to parse transaction extra (TX_EXTRA_NONCE does not have wrong bytes counter) in tx " << get_transaction_hash(tx));
             tx_extra_user_data_found = true;
             if(tx.extra[i])
                 extra.m_user_data_blob.assign(reinterpret_cast<const char*>(&tx.extra[i+1]), static_cast<size_t>(tx.extra[i]));
             i += tx.extra[i];//actually don't need to extract it now, just skip
         }else if(tx.extra[i] == TX_EXTRA_TAG_ALIAS)
         {
-            CHECK_AND_ASSERT_MES(is_coinbase(tx), false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS can be only in coinbase) in tx " << get_transaction_hash(tx));
+            CHECK_AND_ASSERT_MES(is_coinbase(tx), false, "Failed to parse transaction extra (TX_EXTRA_TAG_ALIAS can only be in coinbase) in tx " << get_transaction_hash(tx));
             CHECK_AND_ASSERT_MES(!tx_alias_found, false, "Failed to parse transaction extra (duplicate TX_EXTRA_TAG_ALIAS entry) in tx " << get_transaction_hash(tx));
             size_t aliac_entry_len = 0;
             if(!parse_tx_extra_alias_entry(tx, i, extra.m_alias, aliac_entry_len))
@@ -468,7 +468,7 @@ bool add_tx_pub_key_to_extra(transaction& tx, const crypto::public_key& tx_pub_k
 //---------------------------------------------------------------
 bool add_tx_extra_nonce(transaction& tx, const blobdata& extra_nonce)
 {
-    CHECK_AND_ASSERT_MES(extra_nonce.size() <=255, false, "extra nonce could be 255 bytes max");
+    CHECK_AND_ASSERT_MES(extra_nonce.size() <=255, false, "extra nonce can be 255 bytes max");
     size_t start_pos = tx.extra.size();
     tx.extra.resize(tx.extra.size() + 2 + extra_nonce.size());
     //write tag
@@ -589,7 +589,7 @@ bool construct_tx(const account_keys& sender_account_keys, const std::vector<tx_
     {
         CHECK_AND_ASSERT_MES(dst_entr.amount > 0, false, "Destination with wrong amount: " << dst_entr.amount);
         bool r = construct_tx_out(dst_entr.addr, txkey.sec, output_index, dst_entr.amount, tx,  tx_outs_attr);
-        CHECK_AND_ASSERT_MES(r, false, "Failed to construc tx out");
+        CHECK_AND_ASSERT_MES(r, false, "Failed to construct tx out");
         output_index++;
         summary_outs_money += dst_entr.amount;
     }
@@ -932,7 +932,7 @@ bool apply_scratchpad_patch(std::vector<crypto::hash>& scratchpd, std::map<uint6
 //------------------------------------------------------------------
 bool validate_alias_name(const std::string& al)
 {
-    CHECK_AND_ASSERT_MES(al.size() <= MAX_ALIAS_LEN, false, "Too long alias name, please use name no longer than " << MAX_ALIAS_LEN );
+    CHECK_AND_ASSERT_MES(al.size() <= MAX_ALIAS_LEN, false, "Alias name is too long, please use name no longer than " << MAX_ALIAS_LEN );
     /*allowed symbols "a-z", "-", "." */
     static bool alphabet[256] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                                  0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,
