@@ -56,7 +56,7 @@ namespace currency
 
     if(outputs_amount >= inputs_amount)
     {
-      LOG_PRINT_L0("transaction uses more money then it has: use " << outputs_amount << ", have " << inputs_amount);
+      LOG_PRINT_L0("transaction uses more money than it has: use " << outputs_amount << ", have " << inputs_amount);
       tvc.m_verifivation_failed = true;
       return false;
     }
